@@ -1,0 +1,1192 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مبيعات أكتوبر</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--font-anthropic-sans:"IBM Plex Sans Arabic",system-ui,sans-serif;--font-anthropic-serif:"Noto Naskh Arabic","IBM Plex Sans Arabic",serif;
+--cds-font-size-caption:.8rem;--cds-font-size-body:.95rem;--cds-font-size-heading:1.05rem;--cds-font-size-title:1.75rem;--cds-font-weight-medium:600;
+--cds-gap-xs:.25rem;--cds-gap-sm:.5rem;--cds-gap-md:1rem;--cds-gap-lg:1.5rem;--cds-gap-xl:2rem;--cds-pad-xs:.35rem;--cds-pad-sm:.6rem;--cds-pad-md:.9rem;--cds-pad-lg:1.25rem;--cds-pad-xl:1.75rem;
+--cds-radius:10px;--cds-dur-slow:320ms;--cds-ease-out:cubic-bezier(.2,.8,.2,1);
+--color-bg:#f7f6f3;--color-panel:#ffffff;--color-fg:#1d1b19;--color-fg-muted:#6b6660;--color-border-line:#e5e1db;--color-ok:#1f8a5b;--color-warn:#b7791f;--color-bad:#c2410c;
+--cds-chart-grid:#ebe7e1;--cds-chart-axis:#c9c3bb;--cds-chart-reference:#9a948c;--cds-chart-muted:#b9b3ab;--cds-chart-status-critical:#d9480f;
+--cds-surface-popover:#ffffff;--cds-border:#e5e1db;--cds-shadow-popover:0 8px 24px rgba(0,0,0,.12);--cds-text-secondary:#6b6660;
+--s0:#5b5bd6;--s1:#d6409f;--s2:#0f9d8a;--s3:#e5871a;--s4:#3b82c4;--s5:#8a5cd1}
+@media (prefers-color-scheme:dark){:root{--color-bg:#121214;--color-panel:#1b1b1f;--color-fg:#f2f1ee;--color-fg-muted:#a29d96;--color-border-line:#2c2c32;--color-ok:#4ade9a;--color-warn:#f2b54a;--color-bad:#fb7a4b;
+--cds-chart-grid:#2a2a30;--cds-chart-axis:#45454d;--cds-chart-reference:#7d7a75;--cds-chart-muted:#5d5b58;--cds-chart-status-critical:#ff6b3d;--cds-surface-popover:#222227;--cds-border:#34343a;--cds-shadow-popover:0 8px 24px rgba(0,0,0,.5);--cds-text-secondary:#a29d96;
+--s0:#8b8bff;--s1:#ff6fc1;--s2:#3fd6bf;--s3:#ffab4a;--s4:#6ab4ff;--s5:#b48cff}}
+html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:var(--font-anthropic-sans)}
+#dash-root{padding:clamp(16px,3vw,40px)}
+.dash-skeleton:empty,.px-chart.dash-skeleton{background:linear-gradient(90deg,var(--cds-chart-grid),transparent,var(--cds-chart-grid));background-size:200% 100%;border-radius:8px;animation:sk 1.4s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
+.px-foot{margin-top:2rem;text-align:center;font-size:.8rem;color:var(--color-fg-muted)}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+(function(){
+  const RAW = {"sales": [{"day": "2026-10-01", "khobar": "12960.56", "dammam": "13583.48", "total": "26544.04"}, {"day": "2026-10-02", "khobar": "17480.78", "dammam": "16437.39", "total": "33918.17"}, {"day": "2026-10-03", "khobar": "7102.61", "dammam": "10026.96", "total": "17129.57"}, {"day": "2026-10-04", "khobar": "6783.19", "dammam": "8022.61", "total": "14805.80"}, {"day": "2026-10-05", "khobar": "6252.17", "dammam": "8733.91", "total": "14986.08"}, {"day": "2026-10-06", "khobar": "6502.15", "dammam": "9339.13", "total": "15841.28"}, {"day": "2026-10-07", "khobar": "7854.75", "dammam": "10562.61", "total": "18417.36"}, {"day": "2026-10-08", "khobar": "12297.43", "dammam": "13146.96", "total": "25444.39"}, {"day": "2026-10-09", "khobar": "17573.02", "dammam": "16613.91", "total": "34186.93"}, {"day": "2026-10-10", "khobar": "7248.11", "dammam": "10674.78", "total": "17922.89"}, {"day": "2026-10-11", "khobar": "5534.03", "dammam": "8400.00", "total": "13934.03"}, {"day": "2026-10-12", "khobar": "5816.69", "dammam": "8850.43", "total": "14667.12"}, {"day": "2026-10-13", "khobar": "6118.95", "dammam": "8370.43", "total": "14489.38"}, {"day": "2026-10-14", "khobar": "7984.05", "dammam": "9786.09", "total": "17770.14"}], "targets": [{"day": "2026-10-01", "weight": "1.9", "thu_fri": "1", "slow_period": "0", "khobar_target": "23241.59", "dammam_target": "23241.59", "total_target": "46483.18"}, {"day": "2026-10-02", "weight": "1.9", "thu_fri": "1", "slow_period": "0", "khobar_target": "23241.59", "dammam_target": "23241.59", "total_target": "46483.18"}, {"day": "2026-10-03", "weight": "1.0", "thu_fri": "0", "slow_period": "0", "khobar_target": "12232.42", "dammam_target": "12232.42", "total_target": "24464.84"}, {"day": "2026-10-04", "weight": "1.0", "thu_fri": "0", "slow_period": "0", "khobar_target": "12232.42", "dammam_target": "12232.42", "total_target": "24464.84"}, {"day": "2026-10-05", "weight": "1.0", "thu_fri": "0", "slow_period": "0", "khobar_target": "12232.42", "dammam_target": "12232.42", "total_target": "24464.84"}, {"day": "2026-10-06", "weight": "1.0", "thu_fri": "0", "slow_period": "0", "khobar_target": "12232.42", "dammam_target": "12232.42", "total_target": "24464.84"}, {"day": "2026-10-07", "weight": "1.0", "thu_fri": "0", "slow_period": "0", "khobar_target": "12232.42", "dammam_target": "12232.42", "total_target": "24464.84"}, {"day": "2026-10-08", "weight": "1.9", "thu_fri": "1", "slow_period": "0", "khobar_target": "23241.59", "dammam_target": "23241.59", "total_target": "46483.18"}, {"day": "2026-10-09", "weight": "1.9", "thu_fri": "1", "slow_period": "0", "khobar_target": "23241.59", "dammam_target": "23241.59", "total_target": "46483.18"}, {"day": "2026-10-10", "weight": "1.0", "thu_fri": "0", "slow_period": "0", "khobar_target": "12232.42", "dammam_target": "12232.42", "total_target": "24464.84"}, {"day": "2026-10-11", "weight": "1.0", "thu_fri": "0", "slow_period": "0", "khobar_target": "12232.42", "dammam_target": "12232.42", "total_target": "24464.84"}, {"day": "2026-10-12", "weight": "1.0", "thu_fri": "0", "slow_period": "0", "khobar_target": "12232.42", "dammam_target": "12232.42", "total_target": "24464.84"}, {"day": "2026-10-13", "weight": "1.0", "thu_fri": "0", "slow_period": "0", "khobar_target": "12232.42", "dammam_target": "12232.42", "total_target": "24464.84"}, {"day": "2026-10-14", "weight": "1.0", "thu_fri": "0", "slow_period": "0", "khobar_target": "12232.42", "dammam_target": "12232.42", "total_target": "24464.84"}, {"day": "2026-10-15", "weight": "0.95", "thu_fri": "1", "slow_period": "1", "khobar_target": "11620.8", "dammam_target": "11620.8", "total_target": "23241.6"}, {"day": "2026-10-16", "weight": "0.95", "thu_fri": "1", "slow_period": "1", "khobar_target": "11620.8", "dammam_target": "11620.8", "total_target": "23241.6"}, {"day": "2026-10-17", "weight": "0.5", "thu_fri": "0", "slow_period": "1", "khobar_target": "6116.21", "dammam_target": "6116.21", "total_target": "12232.42"}, {"day": "2026-10-18", "weight": "0.5", "thu_fri": "0", "slow_period": "1", "khobar_target": "6116.21", "dammam_target": "6116.21", "total_target": "12232.42"}, {"day": "2026-10-19", "weight": "0.5", "thu_fri": "0", "slow_period": "1", "khobar_target": "6116.21", "dammam_target": "6116.21", "total_target": "12232.42"}, {"day": "2026-10-20", "weight": "0.5", "thu_fri": "0", "slow_period": "1", "khobar_target": "6116.21", "dammam_target": "6116.21", "total_target": "12232.42"}, {"day": "2026-10-21", "weight": "0.5", "thu_fri": "0", "slow_period": "1", "khobar_target": "6116.21", "dammam_target": "6116.21", "total_target": "12232.42"}, {"day": "2026-10-22", "weight": "0.95", "thu_fri": "1", "slow_period": "1", "khobar_target": "11620.8", "dammam_target": "11620.8", "total_target": "23241.6"}, {"day": "2026-10-23", "weight": "0.95", "thu_fri": "1", "slow_period": "1", "khobar_target": "11620.8", "dammam_target": "11620.8", "total_target": "23241.6"}, {"day": "2026-10-24", "weight": "0.5", "thu_fri": "0", "slow_period": "1", "khobar_target": "6116.21", "dammam_target": "6116.21", "total_target": "12232.42"}, {"day": "2026-10-25", "weight": "0.5", "thu_fri": "0", "slow_period": "1", "khobar_target": "6116.21", "dammam_target": "6116.21", "total_target": "12232.42"}, {"day": "2026-10-26", "weight": "1.0", "thu_fri": "0", "slow_period": "0", "khobar_target": "12232.42", "dammam_target": "12232.42", "total_target": "24464.84"}, {"day": "2026-10-27", "weight": "1.0", "thu_fri": "0", "slow_period": "0", "khobar_target": "12232.42", "dammam_target": "12232.42", "total_target": "24464.84"}, {"day": "2026-10-28", "weight": "1.0", "thu_fri": "0", "slow_period": "0", "khobar_target": "12232.42", "dammam_target": "12232.42", "total_target": "24464.84"}, {"day": "2026-10-29", "weight": "1.9", "thu_fri": "1", "slow_period": "0", "khobar_target": "23241.59", "dammam_target": "23241.59", "total_target": "46483.18"}, {"day": "2026-10-30", "weight": "1.9", "thu_fri": "1", "slow_period": "0", "khobar_target": "23241.59", "dammam_target": "23241.59", "total_target": "46483.18"}, {"day": "2026-10-31", "weight": "1.0", "thu_fri": "0", "slow_period": "0", "khobar_target": "12232.42", "dammam_target": "12232.42", "total_target": "24464.84"}], "products": [{"product": "Ethiopia Guji Anbessa ICD", "category": "مشروبات باردة", "qty": "1585", "sales": "27716.52"}, {"product": "chocolate cake", "category": "حلويات", "qty": "229", "sales": "5297.35"}, {"product": "Ethiopia Guji Anbessa HOT", "category": "مشروبات ساخنة", "qty": "194", "sales": "3220.87"}, {"product": "vanilla cake", "category": "حلويات", "qty": "17", "sales": "428.7"}, {"product": "hot Colombi selva", "category": "مشروبات ساخنة", "qty": "85", "sales": "1425.22"}, {"product": "Matilda cake new", "category": "حلويات", "qty": "116", "sales": "3227.83"}, {"product": "بن سعودي - Bin Saudi", "category": "بن (أكياس)", "qty": "5", "sales": "595.65"}, {"product": "ETHIOPIA ADADO ICED", "category": "مشروبات باردة", "qty": "4", "sales": "72.17"}, {"product": "Cold Water", "category": "أخرى", "qty": "858", "sales": "746.09"}, {"product": "Waked beans ICD", "category": "مشروبات باردة", "qty": "716", "sales": "12629.56"}, {"product": "Ethiopian Baba Tolu HOT", "category": "مشروبات ساخنة", "qty": "213", "sales": "3531.3"}, {"product": "wakad chocolate cake", "category": "حلويات", "qty": "586", "sales": "15132.17"}, {"product": "Uganda Rwenzori ICD", "category": "مشروبات باردة", "qty": "204", "sales": "3581.74"}, {"product": "Bin Ethiopian Baba Tolu 250G", "category": "بن (أكياس)", "qty": "2", "sales": "120.0"}, {"product": "Iced matcha", "category": "مشروبات باردة", "qty": "264", "sales": "4664.35"}, {"product": "Iced flat white", "category": "مشروبات باردة", "qty": "42", "sales": "594.78"}, {"product": "Iced latte", "category": "مشروبات باردة", "qty": "54", "sales": "847.83"}, {"product": "chocolate Wekad with Coffee of the Day HOT", "category": "كومبو", "qty": "1", "sales": "25.22"}, {"product": "mango cake", "category": "حلويات", "qty": "3", "sales": "70.43"}, {"product": "Graiham Cake", "category": "حلويات", "qty": "170", "sales": "4286.96"}, {"product": "Spanish latte", "category": "مشروبات ساخنة", "qty": "109", "sales": "1916.52"}, {"product": "Falafel wekad", "category": "أكل", "qty": "23", "sales": "520.0"}, {"product": "Pecan with Coffee of the Day ICD", "category": "كومبو", "qty": "1", "sales": "25.22"}, {"product": "Pecan cake", "category": "حلويات", "qty": "533", "sales": "12696.52"}, {"product": "ETHIOPIA ANASORA ICD", "category": "مشروبات باردة", "qty": "6", "sales": "104.35"}, {"product": "half tona", "category": "أكل", "qty": "55", "sales": "621.74"}, {"product": "alfredo espresso", "category": "مشروبات ساخنة", "qty": "736", "sales": "9126.95"}, {"product": "Espresso hot", "category": "مشروبات ساخنة", "qty": "890", "sales": "10076.52"}, {"product": "hot Colombi strawberry", "category": "مشروبات ساخنة", "qty": "26", "sales": "525.22"}, {"product": "قهوو اليوم 2لتر -Coffee of the Day 2Liter", "category": "قهوة اليوم باللتر", "qty": "3", "sales": "247.83"}, {"product": "wakad cheesecake", "category": "حلويات", "qty": "1048", "sales": "26834.78"}, {"product": "latte hot", "category": "مشروبات ساخنة", "qty": "179", "sales": "2500.87"}, {"product": "mango cheesecake", "category": "حلويات", "qty": "105", "sales": "2921.74"}, {"product": "chocolate Wekad with Coffee of the Day ICD", "category": "كومبو", "qty": "5", "sales": "126.09"}, {"product": "cappuccino hot", "category": "مشروبات ساخنة", "qty": "221", "sales": "3090.43"}, {"product": "قهوو اليوم 1 لتر -Coffee of the Day 1 Liter", "category": "قهوة اليوم باللتر", "qty": "18", "sales": "691.3"}, {"product": "Halloumi with thyme", "category": "أكل", "qty": "175", "sales": "3956.52"}, {"product": "cortado hot", "category": "مشروبات ساخنة", "qty": "74", "sales": "966.96"}, {"product": "Uganda Rwenzori HOT", "category": "مشروبات ساخنة", "qty": "37", "sales": "616.52"}, {"product": "250g) beans Colombia selva ) - قهوه كولمبي سيلفا", "category": "بن (أكياس)", "qty": "18", "sales": "907.83"}, {"product": "بن اوغندي روينزوري-( 250G )Uganda Rwenzori", "category": "بن (أكياس)", "qty": "14", "sales": "706.96"}, {"product": "بن وكاد - Wekad beans", "category": "بن (أكياس)", "qty": "12", "sales": "982.61"}, {"product": "ETHIOPIA Banko HOT", "category": "مشروبات ساخنة", "qty": "1", "sales": "16.52"}, {"product": "Pecan with Coffee of the Day HOT", "category": "كومبو", "qty": "1", "sales": "25.22"}, {"product": "coffee of the day hot", "category": "مشروبات ساخنة", "qty": "148", "sales": "1477.07"}, {"product": "Iced Hibiscus", "category": "مشروبات باردة", "qty": "358", "sales": "6265.22"}, {"product": "Ethiopian Baba Tolu ICD", "category": "مشروبات باردة", "qty": "1704", "sales": "29937.38"}, {"product": "Americano hot", "category": "مشروبات ساخنة", "qty": "175", "sales": "2156.52"}, {"product": "london caramel cake", "category": "حلويات", "qty": "108", "sales": "3005.22"}, {"product": "half falafel", "category": "أكل", "qty": "22", "sales": "248.7"}, {"product": "iced coffee of the day", "category": "مشروبات باردة", "qty": "1067", "sales": "10593.65"}, {"product": "iced Colombi selva", "category": "مشروبات باردة", "qty": "717", "sales": "12524.34"}, {"product": "Iced Spanish latte", "category": "مشروبات باردة", "qty": "323", "sales": "5721.74"}, {"product": "iced Colombi strawberry", "category": "مشروبات باردة", "qty": "347", "sales": "7286.09"}, {"product": "Hot Saudi", "category": "مشروبات ساخنة", "qty": "72", "sales": "1455.65"}, {"product": "carrot cake", "category": "حلويات", "qty": "92", "sales": "2320.0"}, {"product": "half Halome", "category": "أكل", "qty": "139", "sales": "1571.3"}, {"product": "coconut choco cake", "category": "حلويات", "qty": "28", "sales": "706.09"}, {"product": "هوت تشوكليت Hot chocolate", "category": "مشروبات ساخنة", "qty": "7", "sales": "139.13"}, {"product": "wakad beans H", "category": "مشروبات ساخنة", "qty": "94", "sales": "1568.7"}, {"product": "tiramisu wekad", "category": "حلويات", "qty": "53", "sales": "1336.52"}, {"product": "flat white", "category": "مشروبات ساخنة", "qty": "329", "sales": "4319.13"}, {"product": "Spicy tuna", "category": "أكل", "qty": "51", "sales": "1153.04"}, {"product": "ETHIOPIA Banko Iced", "category": "مشروبات باردة", "qty": "1", "sales": "17.39"}, {"product": "Icd Saudi", "category": "مشروبات باردة", "qty": "698", "sales": "14671.31"}, {"product": "Iced Americana", "category": "مشروبات باردة", "qty": "168", "sales": "2225.22"}, {"product": "Ethiopia Guji Anbessa (250 G)- اثيوبي انبيسا ربع", "category": "بن (أكياس)", "qty": "3", "sales": "153.04"}]};
+  const calcs = {}, cache = {}, subs = [];
+  const get = id => {
+    if (RAW[id]) return RAW[id];
+    if (cache[id]) return cache[id];
+    const c = calcs[id]; if (!c) return null;
+    cache[id] = c.fn(...c.inputs.map(get)); return cache[id];
+  };
+  window.dash = {
+    colors: ['var(--s0)','var(--s1)','var(--s2)','var(--s3)','var(--s4)','var(--s5)','var(--s0)','var(--s1)'],
+    calc: (id, def) => { calcs[id] = def; },
+    loader: () => {},
+    data: id => { try { const d = get(id); return d ? { status: 'ok', data: d, columns: d[0] ? Object.keys(d[0]) : [], meta: [] } : { status: 'missing', data: [] }; } catch (e) { console.error(e); return { status: 'error', data: [], message: String(e) }; } },
+    onData: fn => { subs.push(fn); requestAnimationFrame(() => fn()); },
+    setLink: name => { try { history.replaceState(null, '', '#' + name); } catch (e) {} },
+    params: () => ({}), setParams: () => {}, resetParams: () => {}, refresh: () => {}
+  };
+  let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => subs.forEach(f => f()), 150); });
+})();
+</script>
+</head>
+<body>
+<div id="dash-root">
+<div class="px" dir="rtl">
+<style>
+  .px { font-family: var(--font-anthropic-sans); container-type: inline-size; max-width: 1280px; margin-inline: auto; }
+  .px *, .px *::before { box-sizing: border-box; }
+
+  /* hero */
+  .px-hero { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--cds-gap-md); padding-bottom: var(--cds-gap-lg); }
+  .px-eyebrow { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); letter-spacing: .02em; display: flex; align-items: center; gap: .4rem; }
+  .px-dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--color-ok); display: inline-block; }
+  .px-hero h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: calc(var(--cds-font-size-title) * 1.25); line-height: 1.2; margin: var(--cds-gap-xs) 0 0; }
+  .px-chips { display: flex; flex-wrap: wrap; gap: var(--cds-gap-xs); }
+  .px-chip { display: inline-flex; align-items: center; gap: .35rem; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); border: 1px solid var(--color-border-line); background: var(--color-panel); border-radius: 999px; padding: .25rem .7rem; }
+  .px-chip svg { width: 14px; height: 14px; }
+
+  /* tabs */
+  .px-tabs { display: inline-flex; gap: 2px; padding: 3px; background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: 999px; margin-bottom: var(--cds-gap-lg); max-width: 100%; overflow-x: auto; }
+  .px-tabs button { font: inherit; font-size: var(--cds-font-size-body); display: inline-flex; align-items: center; gap: .45rem; background: none; border: 0; border-radius: 999px; color: var(--color-fg-muted); padding: .45rem 1rem; cursor: pointer; white-space: nowrap; transition: background var(--cds-dur-slow), color var(--cds-dur-slow); }
+  .px-tabs button svg { width: 16px; height: 16px; }
+  .px-tabs button[aria-selected="true"] { background: var(--color-fg); color: var(--color-bg); }
+  .px-tabs button:not([aria-selected="true"]):hover { color: var(--color-fg); }
+  .px-panel[hidden] { display: none; }
+
+  /* summary banner */
+  .px-insight { display: flex; gap: var(--cds-gap-sm); align-items: flex-start; background: var(--color-panel); border: 1px solid var(--color-border-line); border-inline-start: 4px solid var(--px-accent, var(--color-fg)); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); margin-bottom: var(--cds-gap-md); font-size: var(--cds-font-size-body); line-height: 1.7; min-height: 3.2rem; }
+  .px-insight svg { flex: none; width: 20px; height: 20px; margin-top: .2rem; color: var(--color-fg-muted); }
+
+  /* grid & cards */
+  .px-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: var(--cds-gap-md); margin-bottom: var(--cds-gap-md); }
+  .px-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: var(--cds-gap-md); margin-bottom: var(--cds-gap-md); }
+  @container (min-width: 900px) { .px-span2 { grid-column: span 2; } }
+  .px-full { grid-column: 1 / -1; }
+  .px-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: calc(var(--cds-radius) * 1.5); padding: var(--cds-pad-lg); min-width: 0; position: relative; overflow: hidden; }
+  .px-card-h { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--cds-gap-sm); margin-bottom: var(--cds-gap-md); }
+  .px-card-h h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+  .px-card-h p { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin: .25rem 0 0; line-height: 1.6; }
+
+  /* kpi */
+  .px-kpi { display: flex; flex-direction: column; gap: .35rem; min-height: 9.5rem; }
+  .px-kpi-top { display: flex; align-items: center; gap: .5rem; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .px-ico { width: 30px; height: 30px; border-radius: 9px; display: inline-grid; place-items: center; flex: none; border: 1px solid var(--color-border-line); color: var(--color-fg); }
+  .px-ico svg { width: 16px; height: 16px; }
+  .px-big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.15; }
+  .px-unit { font-family: var(--font-anthropic-sans); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-inline-start: .25rem; }
+  .px-meta { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
+  .px-spark { margin-top: auto; height: 38px; direction: ltr; }
+  .px-pill { display: inline-flex; align-items: center; gap: .2rem; font-size: var(--cds-font-size-caption); font-weight: var(--cds-font-weight-medium); padding: .1rem .5rem; border-radius: 999px; border: 1px solid currentColor; font-variant-numeric: tabular-nums; }
+  .px-pill.ok { color: var(--color-ok); } .px-pill.bad { color: var(--color-bad); } .px-pill.warn { color: var(--color-warn); } .px-pill.mute { color: var(--color-fg-muted); }
+
+  /* charts */
+  .px-chart { position: relative; direction: ltr; }
+  .px-h300 { min-height: 300px; } .px-h260 { min-height: 260px; } .px-h340 { min-height: 340px; } .px-h400 { min-height: 400px; } .px-h220 { min-height: 220px; }
+  .px-legend { display: flex; flex-wrap: wrap; gap: .4rem .9rem; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .px-legend span { display: inline-flex; align-items: center; gap: .35rem; }
+  .px-sw { display: inline-block; width: .65rem; height: .65rem; border-radius: 3px; }
+  .px-sw.line { height: 3px; border-radius: 2px; width: 1rem; }
+  .px-sw.dash { height: 0; border-top: 2px dashed var(--cds-chart-reference); width: 1rem; border-radius: 0; }
+  .px-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); white-space: nowrap; display: none; direction: rtl; z-index: 3; font-variant-numeric: tabular-nums; min-width: 9rem; }
+  .px-tip .d { color: var(--cds-text-secondary); margin-bottom: 4px; }
+  .px-tip .l { display: flex; align-items: center; gap: .4rem; justify-content: space-between; }
+  .px-tip .l span:first-child { display: inline-flex; align-items: center; gap: .35rem; }
+  .px-tip .l b { font-weight: var(--cds-font-weight-medium); }
+  .px-tip i { display: inline-block; width: .5rem; height: .5rem; border-radius: 2px; }
+
+  /* donut */
+  .px-donut { display: flex; flex-direction: column; align-items: center; gap: var(--cds-gap-md); }
+  .px-donut .px-chart { width: 100%; max-width: 220px; min-height: 200px; }
+  .px-rows { width: 100%; }
+  .px-row { display: flex; justify-content: space-between; align-items: center; gap: var(--cds-gap-sm); font-size: var(--cds-font-size-body); font-variant-numeric: tabular-nums; padding: .5rem 0; border-top: 1px solid var(--color-border-line); }
+  .px-row:first-child { border-top: 0; }
+  .px-row > span:first-child { display: inline-flex; align-items: center; gap: .45rem; color: var(--color-fg-muted); }
+  .px-row b { font-weight: var(--cds-font-weight-medium); }
+
+  /* gauges */
+  .px-gauge-wrap { display: grid; grid-template-columns: minmax(0, 170px) 1fr; gap: var(--cds-gap-lg); align-items: center; }
+  @container (max-width: 520px) { .px-gauge-wrap { grid-template-columns: 1fr; } }
+  .px-gauge { min-height: 170px; }
+
+  /* calendar */
+  .px-cal-head, .px-cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+  .px-cal-head div { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); text-align: center; padding-bottom: 4px; }
+  .px-cal { min-height: 300px; }
+  .px-day { border-radius: 10px; border: 1px solid var(--color-border-line); padding: 6px 8px; min-height: 64px; display: flex; flex-direction: column; justify-content: space-between; position: relative; font-variant-numeric: tabular-nums; }
+  .px-day .n { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); display: flex; justify-content: space-between; }
+  .px-day .t { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); }
+  .px-day .a { font-size: 11px; font-weight: var(--cds-font-weight-medium); }
+  .px-day.blank { border: 0; background: none; }
+  .px-day.today { outline: 2px solid var(--color-fg); outline-offset: -1px; }
+
+  /* table */
+  .px-tools { display: flex; gap: var(--cds-gap-sm); align-items: center; margin-bottom: var(--cds-gap-sm); flex-wrap: wrap; }
+  .px-search { position: relative; flex: 1 1 14rem; }
+  .px-search svg { position: absolute; inset-inline-start: .7rem; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; color: var(--color-fg-muted); }
+  .px-search input { font: inherit; font-size: var(--cds-font-size-body); width: 100%; padding: .5rem .8rem; padding-inline-start: 2.1rem; border: 1px solid var(--color-border-line); border-radius: 999px; background: var(--color-bg); color: var(--color-fg); }
+  .px-count { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .px-tbl-wrap { max-height: 480px; overflow: auto; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); }
+  .px table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: var(--cds-font-size-body); }
+  .px th { position: sticky; top: 0; z-index: 1; background: var(--color-panel); text-align: start; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); padding: .6rem .75rem; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .px th button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; display: inline-flex; align-items: center; gap: .25rem; }
+  .px th[aria-sort="ascending"] button::after { content: "▲"; font-size: 9px; }
+  .px th[aria-sort="descending"] button::after { content: "▼"; font-size: 9px; }
+  .px td { padding: .55rem .75rem; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+  .px tbody tr:last-child td { border-bottom: 0; }
+  .px tbody tr:hover td { background: color-mix(in srgb, var(--color-fg) 4%, transparent); }
+  .px td.prod { direction: ltr; text-align: right; max-width: 18rem; overflow: hidden; text-overflow: ellipsis; }
+  .px .ok { color: var(--color-ok); } .px .bad { color: var(--color-bad); } .px .warn { color: var(--color-warn); }
+  .px td.hi { color: var(--color-ok); font-weight: var(--cds-font-weight-medium); }
+  .px .cellbar { display: flex; align-items: center; gap: .5rem; min-width: 9rem; }
+  .px .cellbar i { display: block; height: 6px; border-radius: 3px; flex: none; }
+  .px .tag { display: inline-flex; align-items: center; gap: .3rem; font-size: var(--cds-font-size-caption); padding: .1rem .55rem; border-radius: 999px; border: 1px solid var(--color-border-line); }
+  .px .tag i { width: .45rem; height: .45rem; border-radius: 50%; display: inline-block; }
+  @container (max-width: 640px) { .px .hide-sm { display: none; } }
+
+  /* class cards */
+  .px-cls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: var(--cds-gap-md); margin-bottom: var(--cds-gap-md); min-height: 10rem; }
+  .px-cls .px-card { display: flex; flex-direction: column; gap: .4rem; }
+  .px-cls .px-card::before { content: ""; position: absolute; inset-inline: 0; top: 0; height: 4px; background: var(--c); }
+  .px-cls .q { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+  .px-cls .act { font-size: var(--cds-font-size-caption); line-height: 1.65; margin-top: auto; padding-top: .5rem; border-top: 1px dashed var(--color-border-line); }
+
+  /* alerts */
+  .px-alert { border-color: color-mix(in srgb, var(--color-bad) 40%, var(--color-border-line)); background: color-mix(in srgb, var(--color-bad) 5%, var(--color-panel)); }
+  .px-alert .px-ico { color: var(--color-bad); border-color: color-mix(in srgb, var(--color-bad) 40%, transparent); }
+
+  /* states */
+  [data-dash-source-state=empty] { color: transparent; }
+  [data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+  .px-fail { display: flex; align-items: center; justify-content: center; gap: .4rem; min-height: inherit; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+  .px-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes px-up { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    @keyframes px-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+    @keyframes px-growx { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @keyframes px-fade { from { opacity: 0; } to { opacity: 1; } }
+    .px-panel:not([hidden]) > * { animation: px-up var(--cds-dur-slow) var(--cds-ease-out) both; }
+    .px-panel:not([hidden]) > *:nth-child(2) { animation-delay: 40ms; } .px-panel:not([hidden]) > *:nth-child(3) { animation-delay: 80ms; } .px-panel:not([hidden]) > *:nth-child(4) { animation-delay: 120ms; } .px-panel:not([hidden]) > *:nth-child(n+5) { animation-delay: 160ms; }
+    .px .anim-y { transform-box: fill-box; transform-origin: bottom; animation: px-grow 600ms var(--cds-ease-out) both; }
+    .px .anim-x { transform-box: fill-box; transform-origin: left; animation: px-growx 600ms var(--cds-ease-out) both; }
+    .px .anim-f { animation: px-fade 700ms var(--cds-ease-out) both; }
+  }
+  /* ===== aurora theme ===== */
+  .px { position: relative; isolation: isolate; padding-top: var(--cds-gap-sm); }
+  .px-aurora { position: absolute; inset: -40px -20px auto -20px; height: 620px; z-index: -1; pointer-events: none; overflow: hidden; }
+  .px-aurora i { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .32; }
+  .px-aurora i:nth-child(1) { width: 46%; height: 70%; background: var(--a0); top: -10%; right: -5%; }
+  .px-aurora i:nth-child(2) { width: 40%; height: 60%; background: var(--a1); top: 5%; left: 0%; }
+  .px-aurora i:nth-child(3) { width: 34%; height: 50%; background: var(--a2); top: 35%; right: 35%; opacity: .22; }
+  .px-aurora::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, var(--color-bg) 100%); }
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes px-drift1 { 50% { transform: translate(-6%, 8%) scale(1.08); } }
+    @keyframes px-drift2 { 50% { transform: translate(8%, -4%) scale(.94); } }
+    @keyframes px-drift3 { 50% { transform: translate(-4%, -8%) scale(1.12); } }
+    .px-aurora i:nth-child(1) { animation: px-drift1 18s ease-in-out infinite; }
+    .px-aurora i:nth-child(2) { animation: px-drift2 22s ease-in-out infinite; }
+    .px-aurora i:nth-child(3) { animation: px-drift3 26s ease-in-out infinite; }
+    @keyframes px-draw { to { stroke-dashoffset: 0; } }
+    .px .anim-draw { animation: px-draw 1400ms var(--cds-ease-out) both; }
+    @keyframes px-spin-in { from { opacity: 0; transform: rotate(-30deg) scale(.85); } to { opacity: 1; transform: none; } }
+    .px .anim-spin { transform-origin: center; transform-box: fill-box; animation: px-spin-in 1100ms var(--cds-ease-out) both; }
+    @keyframes px-pulse { 0%, 100% { opacity: .55; r: 3; } 50% { opacity: 1; r: 5; } }
+    .px .pulse { animation: px-pulse 2.2s ease-in-out infinite; }
+    .px-card { transition: transform var(--cds-dur-slow) var(--cds-ease-out), box-shadow var(--cds-dur-slow); }
+    .px-card:hover { transform: translateY(-2px); }
+  }
+  .px-hero { padding: var(--cds-pad-lg) 0 var(--cds-gap-lg); }
+  .px-hero h1 { background: linear-gradient(100deg, var(--color-fg) 10%, var(--a0) 55%, var(--a1) 95%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .px-dot { background: var(--a0); box-shadow: 0 0 0 4px color-mix(in srgb, var(--a0) 25%, transparent), 0 0 14px var(--a0); }
+  .px-card, .px-insight, .px-tabs, .px-chip {
+    background: color-mix(in srgb, var(--color-panel) 74%, transparent);
+    -webkit-backdrop-filter: blur(16px) saturate(140%); backdrop-filter: blur(16px) saturate(140%);
+    border-color: color-mix(in srgb, var(--a0) 16%, var(--color-border-line));
+  }
+  .px-card { border-radius: 18px; box-shadow: 0 1px 0 color-mix(in srgb, var(--color-fg) 4%, transparent), 0 12px 32px -18px color-mix(in srgb, var(--a0) 45%, transparent); }
+  .px-card:hover { box-shadow: 0 1px 0 color-mix(in srgb, var(--color-fg) 4%, transparent), 0 18px 40px -16px color-mix(in srgb, var(--a0) 60%, transparent); }
+  .px-card::after { content: ""; position: absolute; inset: 0 0 auto 0; height: 1px; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--a0) 60%, transparent), color-mix(in srgb, var(--a1) 60%, transparent), transparent); pointer-events: none; }
+  .px-tabs button[aria-selected="true"] { background: linear-gradient(110deg, var(--a0), var(--a1)); color: var(--color-bg); box-shadow: 0 6px 18px -8px var(--a0); }
+  .px-ico { border: 0; background: linear-gradient(135deg, color-mix(in srgb, var(--a0) 22%, transparent), color-mix(in srgb, var(--a1) 22%, transparent)); color: var(--a0); }
+  .px-kpi .px-big { font-size: calc(var(--cds-font-size-title) * 1.15); }
+  .px-insight { border-inline-start-width: 0; position: relative; overflow: hidden; }
+  .px-insight::before { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; width: 4px; background: linear-gradient(to bottom, var(--a0), var(--a1)); }
+  .px-insight svg { color: var(--a0); }
+  .px-tbl-wrap { border-color: color-mix(in srgb, var(--a0) 14%, var(--color-border-line)); }
+  .px th { background: color-mix(in srgb, var(--color-panel) 92%, var(--a0)); }
+  .px-day { transition: transform var(--cds-dur-slow); }
+  .px-day:hover { transform: scale(1.04); }
+
+  /* orbit chart */
+  .px-orbit-wrap { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--cds-gap-lg); align-items: center; }
+  @container (max-width: 760px) { .px-orbit-wrap { grid-template-columns: 1fr; } }
+  .px-orbit { min-height: 420px; }
+  .px-orbit-side h3 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-sm); line-height: 1.3; }
+  .px-orbit-side p { color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.8; margin: 0 0 var(--cds-gap-md); }
+  .px-orbit-side .px-legend { flex-direction: column; gap: .55rem; font-size: var(--cds-font-size-body); }
+  .px-sw.ring { background: none !important; border: 2px dashed var(--color-fg-muted); height: .7rem; width: .7rem; border-radius: 50%; }
+</style>
+
+<!-- icon sprites -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15v3M12 10v8M17 6v12"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+    <symbol id="i-cup" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2M10 2v2M14 2v2"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/></symbol>
+    <symbol id="i-cash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></symbol>
+    <symbol id="i-avg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0Z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2Z"/></symbol>
+    <symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5Z"/><path d="M3 8l9 5 9-5M12 13v8"/></symbol>
+    <symbol id="i-pct" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  </defs>
+</svg>
+
+<div class="px-aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<header class="px-hero">
+  <div>
+    <div class="px-eyebrow"><span class="px-dot"></span>تقرير أداء الفرعين · أكتوبر ٢٠٢٦</div>
+    <h1 id="title">المبيعات والتارقت والمنتجات</h1>
+  </div>
+  <div class="px-chips">
+    <span class="px-chip"><svg><use href="#i-cal"/></svg><span class="px-range">—</span></span>
+    <span class="px-chip"><svg><use href="#i-store"/></svg>الخبر · الدمام</span>
+  </div>
+</header>
+
+<nav class="px-tabs" role="tablist">
+  <button role="tab" data-tab="t-daily" aria-selected="true"><svg><use href="#i-chart"/></svg>المبيعات اليومية</button>
+  <button role="tab" data-tab="t-target" aria-selected="false"><svg><use href="#i-target"/></svg>التارقت</button>
+  <button role="tab" data-tab="t-prod" aria-selected="false"><svg><use href="#i-cup"/></svg>تحليل المنتجات</button>
+</nav>
+
+<!-- ============ TAB 1 ============ -->
+<section class="px-panel" id="t-daily">
+  <div class="px-insight dash-skeleton" id="take" data-source="weekend"></div>
+
+  <div class="px-kpis">
+    <div class="px-card px-kpi">
+      <div class="px-kpi-top"><span class="px-ico"><svg><use href="#i-cash"/></svg></span>إجمالي المبيعات</div>
+      <div class="px-big"><span class="dash-skeleton" data-source="summary" data-field="total" data-row="0">—</span><span class="px-unit">ر.س</span></div>
+      <div class="px-meta"><span class="px-ndays">—</span> يوم · الفرعين</div>
+      <div class="px-spark" id="spark-total" data-source="sales"></div>
+    </div>
+    <div class="px-card px-kpi">
+      <div class="px-kpi-top"><span class="px-ico"><svg><use href="#i-avg"/></svg></span>متوسط اليوم</div>
+      <div class="px-big"><span class="dash-skeleton" data-source="summary" data-field="avg" data-row="0">—</span><span class="px-unit">ر.س</span></div>
+      <div class="px-meta">خميس/جمعة <b data-source="weekend" data-field="weekend_avg" data-row="0">—</b></div>
+      <div class="px-meta">باقي الأيام <b data-source="weekend" data-field="other_avg" data-row="0">—</b></div>
+    </div>
+    <div class="px-card px-kpi">
+      <div class="px-kpi-top"><span class="px-ico"><svg><use href="#i-clock"/></svg></span>آخر يوم</div>
+      <div class="px-big"><span class="dash-skeleton" data-source="wow" data-field="last_total" data-row="0">—</span><span class="px-unit">ر.س</span></div>
+      <div class="px-meta"><span id="wow-pill" class="px-pill mute" data-source="wow" data-field="change" data-row="0">—</span> مقابل نفس اليوم الأسبوع اللي قبله</div>
+      <div class="px-meta" data-source="wow" data-field="last_day" data-row="0">—</div>
+    </div>
+    <div class="px-card px-kpi">
+      <div class="px-kpi-top"><span class="px-ico"><svg><use href="#i-trophy"/></svg></span>أعلى يوم</div>
+      <div class="px-big"><span class="dash-skeleton" data-source="summary" data-field="best_total" data-row="0">—</span><span class="px-unit">ر.س</span></div>
+      <div class="px-meta" data-source="summary" data-field="best_day" data-row="0">—</div>
+      <div class="px-meta">أقل يوم: <b data-source="summary" data-field="worst_total" data-row="0">—</b></div>
+    </div>
+  </div>
+
+  <div class="px-card" style="margin-bottom: var(--cds-gap-md);">
+    <div class="px-orbit-wrap">
+      <div class="px-chart px-orbit dash-skeleton" id="orbit" data-source="daily_vs_target"></div>
+      <div class="px-orbit-side">
+        <div class="px-eyebrow" style="margin-bottom:.4rem"><span class="px-dot"></span>نبض الشهر</div>
+        <h3 id="orbit-h">كل يوم من أكتوبر في دائرة وحدة</h3>
+        <p>كل شعاع = يوم. الطول = مبيعات الفرعين فوق بعض، والإطار المتقطع = تارقت اليوم. الأيام الجاية تظهر كإطار بس لين تنضاف مبيعاتها. الأيام المضيئة = خميس وجمعة.</p>
+        <div class="px-legend">
+          <span><i class="px-sw" data-c="0"></i>الخبر</span>
+          <span><i class="px-sw" data-c="1"></i>الدمام</span>
+          <span><i class="px-sw ring"></i>تارقت اليوم (الفرعين)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="px-grid">
+    <div class="px-card px-span2">
+      <div class="px-card-h">
+        <div><h2 id="daily">المبيعات اليومية لكل فرع</h2><p>الخلفية المظللة = الخميس والجمعة</p></div>
+        <div class="px-legend"><span><i class="px-sw" data-c="0"></i>الخبر</span><span><i class="px-sw" data-c="1"></i>الدمام</span></div>
+      </div>
+      <div class="px-chart px-h300 dash-skeleton" id="chart" data-source="sales"></div>
+    </div>
+    <div class="px-card">
+      <div class="px-card-h"><div><h2 id="share">حصة كل فرع</h2><p>من إجمالي المبيعات</p></div></div>
+      <div class="px-donut">
+        <div class="px-chart dash-skeleton" id="donut" data-source="summary"></div>
+        <div class="px-rows">
+          <div class="px-row"><span><i class="px-sw" data-c="0"></i>الخبر</span><span><b data-source="summary" data-field="khobar" data-row="0">—</b> · <span data-source="summary" data-field="khobar_share" data-row="0">—</span></span></div>
+          <div class="px-row"><span><i class="px-sw" data-c="1"></i>الدمام</span><span><b data-source="summary" data-field="dammam" data-row="0">—</b> · <span data-source="summary" data-field="dammam_share" data-row="0">—</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="px-grid">
+    <div class="px-card">
+      <div class="px-card-h"><div><h2 id="wd">متوسط البيع حسب يوم الأسبوع</h2><p>الفرعين مع بعض</p></div><span class="px-pill ok" data-source="weekend" data-field="lift" data-row="0">—</span></div>
+      <div class="px-chart px-h260 dash-skeleton" id="wdchart" data-source="by_weekday"></div>
+    </div>
+    <div class="px-card px-span2">
+      <div class="px-card-h"><div><h2 id="table">الجدول اليومي</h2><p>الأعلى في كل عمود بالأخضر</p></div></div>
+      <div class="px-tbl-wrap" style="max-height: 300px;">
+        <table id="tbl" data-source="sales" data-row-key="day">
+          <thead><tr><th data-field="day">اليوم</th><th data-field="khobar">الخبر</th><th data-field="dammam">الدمام</th><th data-field="total">الإجمالي</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TAB 2 ============ -->
+<section class="px-panel" id="t-target" hidden>
+  <div class="px-insight dash-skeleton" id="take2" data-source="pace"></div>
+
+  <div class="px-grid">
+    <div class="px-card" data-branch="khobar">
+      <div class="px-card-h"><div><h2>فرع الخبر</h2><p>تارقت الشهر <b data-source="pace" data-field="target_month" data-where="branch=khobar">—</b> ر.س</p></div><span class="px-pill mute st">—</span></div>
+      <div class="px-gauge-wrap">
+        <div class="px-chart px-gauge dash-skeleton" data-source="pace"></div>
+        <div class="px-rows">
+          <div class="px-row"><span>الفعلي · <bdi class="px-range-s">—</bdi></span><b data-source="pace" data-field="actual" data-where="branch=khobar">—</b></div>
+          <div class="px-row"><span>تارقت نفس الأيام</span><b data-source="pace" data-field="target_to_date" data-where="branch=khobar">—</b></div>
+          <div class="px-row"><span>المتوقع آخر الشهر</span><b data-source="pace" data-field="projected" data-where="branch=khobar">—</b></div>
+          <div class="px-row"><span>المتبقي للتارقت</span><b data-source="pace" data-field="remaining" data-where="branch=khobar">—</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="px-card" data-branch="dammam">
+      <div class="px-card-h"><div><h2>فرع الدمام</h2><p>تارقت الشهر <b data-source="pace" data-field="target_month" data-where="branch=dammam">—</b> ر.س</p></div><span class="px-pill mute st">—</span></div>
+      <div class="px-gauge-wrap">
+        <div class="px-chart px-gauge dash-skeleton" data-source="pace"></div>
+        <div class="px-rows">
+          <div class="px-row"><span>الفعلي · <bdi class="px-range-s">—</bdi></span><b data-source="pace" data-field="actual" data-where="branch=dammam">—</b></div>
+          <div class="px-row"><span>تارقت نفس الأيام</span><b data-source="pace" data-field="target_to_date" data-where="branch=dammam">—</b></div>
+          <div class="px-row"><span>المتوقع آخر الشهر</span><b data-source="pace" data-field="projected" data-where="branch=dammam">—</b></div>
+          <div class="px-row"><span>المتبقي للتارقت</span><b data-source="pace" data-field="remaining" data-where="branch=dammam">—</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="px-grid">
+    <div class="px-card px-full">
+      <div class="px-card-h">
+        <div><h2 id="cum">التراكمي مقابل التارقت</h2><p>الخط المتقطع = التارقت التراكمي لكل فرع. الخطوط = المبيعات الفعلية التراكمية لين آخر يوم فيه بيانات. المنطقة المظللة = فترة الركود ١٥–٢٥.</p></div>
+        <div class="px-legend"><span><i class="px-sw dash"></i>التارقت</span><span><i class="px-sw line" data-c="0"></i>الخبر</span><span><i class="px-sw line" data-c="1"></i>الدمام</span></div>
+      </div>
+      <div class="px-chart px-h340 dash-skeleton" id="cumchart" data-source="cumulative"></div>
+    </div>
+  </div>
+
+  <div class="px-card">
+    <div class="px-card-h">
+      <div><h2 id="calendar">تقويم التارقت اليومي</h2><p>الرقم الكبير = تارقت كل فرع لليوم. اللون أغمق = يوم أهم. النسبة = إنجاز الفرعين مع بعض في الأيام اللي فيها مبيعات.</p></div>
+    </div>
+    <div class="px-cal-head"><div>الأحد</div><div>الاثنين</div><div>الثلاثاء</div><div>الأربعاء</div><div>الخميس</div><div>الجمعة</div><div>السبت</div></div>
+    <div class="px-cal dash-skeleton" id="cal" data-source="daily_vs_target"></div>
+  </div>
+</section>
+
+<!-- ============ TAB 3 ============ -->
+<section class="px-panel" id="t-prod" hidden>
+  <div class="px-insight dash-skeleton" id="take3" data-source="prod_summary"></div>
+
+  <div class="px-kpis">
+    <div class="px-card px-kpi">
+      <div class="px-kpi-top"><span class="px-ico"><svg><use href="#i-cash"/></svg></span>مبيعات المنتجات</div>
+      <div class="px-big"><span class="dash-skeleton" data-source="prod_summary" data-field="sales" data-row="0">—</span><span class="px-unit">ر.س</span></div>
+      <div class="px-meta">بدون ضريبة</div>
+    </div>
+    <div class="px-card px-kpi">
+      <div class="px-kpi-top"><span class="px-ico"><svg><use href="#i-cup"/></svg></span>القطع المباعة</div>
+      <div class="px-big"><span class="dash-skeleton" data-source="prod_summary" data-field="qty" data-row="0">—</span><span class="px-unit">قطعة</span></div>
+      <div class="px-meta">من <span data-source="prod_summary" data-field="items" data-row="0">—</span> منتج</div>
+    </div>
+    <div class="px-card px-kpi">
+      <div class="px-kpi-top"><span class="px-ico"><svg><use href="#i-avg"/></svg></span>متوسط سعر القطعة</div>
+      <div class="px-big"><span class="dash-skeleton" data-source="prod_summary" data-field="avg_price" data-row="0">—</span><span class="px-unit">ر.س</span></div>
+      <div class="px-meta">المبيعات ÷ القطع</div>
+    </div>
+    <div class="px-card px-kpi">
+      <div class="px-kpi-top"><span class="px-ico"><svg><use href="#i-trophy"/></svg></span>منتجات تجيب ٨٠٪ من المبيعات</div>
+      <div class="px-big"><span class="dash-skeleton" data-source="prod_summary" data-field="n80" data-row="0">—</span><span class="px-unit">منتج</span></div>
+      <div class="px-meta">والباقي يجيب ٢٠٪ بس</div>
+    </div>
+  </div>
+
+  <div class="px-grid">
+    <div class="px-card">
+      <div class="px-card-h"><div><h2 id="cat-h">المبيعات حسب الفئة</h2><p>حصة كل فئة من المبيعات</p></div></div>
+      <div class="px-donut">
+        <div class="px-chart dash-skeleton" id="catdonut" data-source="by_category"></div>
+        <div class="px-rows" id="catrows" data-source="by_category"></div>
+      </div>
+    </div>
+    <div class="px-card px-span2">
+      <div class="px-card-h">
+        <div><h2 id="pareto-h">تركّز المبيعات</h2><p>المنتجات مرتبة من الأعلى مبيعاً. الأعمدة = مبيعات كل منتج، والخط = الحصة التراكمية من الإجمالي.</p></div>
+        <div class="px-legend"><span><i class="px-sw" data-c="0"></i>مبيعات المنتج</span><span><i class="px-sw line" data-c="1"></i>تراكمي ٪</span></div>
+      </div>
+      <div class="px-chart px-h340 dash-skeleton" id="pareto" data-source="pareto"></div>
+    </div>
+  </div>
+
+  <div class="px-grid">
+    <div class="px-card">
+      <div class="px-card-h"><div><h2 id="top-h">أعلى ١٠ مبيعاً</h2><p>بالريال · اللون حسب الفئة</p></div></div>
+      <div class="px-chart px-h340 dash-skeleton" id="topbar" data-source="products"></div>
+    </div>
+    <div class="px-card">
+      <div class="px-card-h"><div><h2 id="topq-h">أعلى ١٠ طلباً</h2><p>بعدد القطع · اللون حسب الفئة</p></div></div>
+      <div class="px-chart px-h340 dash-skeleton" id="topqty" data-source="products"></div>
+    </div>
+  </div>
+
+  <div class="px-card" style="margin-bottom: var(--cds-gap-md);">
+    <div class="px-card-h">
+      <div><h2 id="tree-h">خريطة المبيعات</h2><p>كل مربع = منتج، مساحته = مبيعاته، ولونه = فئته</p></div>
+      <div class="px-legend" id="tree-legend"></div>
+    </div>
+    <div class="px-chart px-h400 dash-skeleton" id="tree" data-source="products"></div>
+  </div>
+
+  <div class="px-card">
+    <div class="px-card-h"><div><h2 id="prod-table">كل المنتجات</h2><p>اضغط على عنوان العمود للترتيب</p></div></div>
+    <div class="px-tools">
+      <label class="px-search"><svg><use href="#i-search"/></svg><input id="psearch" type="search" placeholder="ابحث عن منتج أو فئة…"></label>
+      <span class="px-count" id="pcount"></span>
+    </div>
+    <div class="px-tbl-wrap">
+      <table id="ptbl" data-source="products" data-row-key="product">
+        <thead><tr>
+          <th data-field="product"><button data-k="product">المنتج</button></th>
+          <th data-field="category"><button data-k="category">الفئة</button></th>
+          <th data-field="qty"><button data-k="qty">الكمية</button></th>
+          <th data-field="sales"><button data-k="sales">المبيعات</button></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+</div>
+
+<script>
+/* ================= calcs ================= */
+dash.calc('summary', {
+  title: 'ملخص المبيعات اليومية',
+  description: 'مجموع ومتوسط وأعلى وأقل يوم وحصة كل فرع من المبيعات اليومية.',
+  inputs: ['sales'],
+  fn: (sales) => {
+    const r = sales.map(d => ({ day: d.day, k: Number(d.khobar), m: Number(d.dammam), t: Number(d.total) }));
+    const khobar = r.reduce((s, d) => s + d.k, 0), dammam = r.reduce((s, d) => s + d.m, 0), total = r.reduce((s, d) => s + d.t, 0);
+    const best = r.reduce((a, b) => b.t > a.t ? b : a), worst = r.reduce((a, b) => b.t < a.t ? b : a);
+    return [{ total, khobar, dammam, avg: total / r.length, best_day: best.day, best_total: best.t, worst_day: worst.day, worst_total: worst.t, khobar_share: khobar / total, dammam_share: dammam / total }];
+  }
+});
+
+dash.calc('weekend', {
+  title: 'الخميس والجمعة مقابل غيرها',
+  description: 'متوسط الإجمالي اليومي لأيام الخميس والجمعة مقارنة بباقي الأيام.',
+  inputs: ['sales'],
+  fn: (sales) => {
+    const r = sales.map(d => ({ wd: new Date(d.day.slice(0, 10) + 'T00:00:00Z').getUTCDay(), t: Number(d.total) }));
+    const we = r.filter(d => d.wd === 4 || d.wd === 5), ot = r.filter(d => d.wd !== 4 && d.wd !== 5);
+    const weekend_avg = we.reduce((s, d) => s + d.t, 0) / we.length, other_avg = ot.reduce((s, d) => s + d.t, 0) / ot.length;
+    return [{ weekend_avg, other_avg, lift: weekend_avg / other_avg - 1 }];
+  }
+});
+
+dash.calc('wow', {
+  title: 'آخر يوم مقابل الأسبوع اللي قبله',
+  description: 'إجمالي آخر يوم مقارنة بنفس اليوم قبل ٧ أيام.',
+  inputs: ['sales'],
+  fn: (sales) => {
+    const r = sales.slice().sort((a, b) => a.day < b.day ? -1 : 1);
+    const last = r[r.length - 1], prev = r[r.length - 8];
+    return [{ last_day: last.day, last_total: Number(last.total), prev_day: prev ? prev.day : null, prev_total: prev ? Number(prev.total) : null, change: prev ? Number(last.total) / Number(prev.total) - 1 : null }];
+  }
+});
+
+dash.calc('by_weekday', {
+  title: 'المتوسط حسب يوم الأسبوع',
+  description: 'متوسط الإجمالي اليومي لكل يوم من أيام الأسبوع.',
+  inputs: ['sales'],
+  fn: (sales) => [0, 1, 2, 3, 4, 5, 6].map(wd => {
+    const ds = sales.filter(d => new Date(d.day.slice(0, 10) + 'T00:00:00Z').getUTCDay() === wd);
+    return { weekday: wd, days: ds.length, avg_total: ds.length ? ds.reduce((s, d) => s + Number(d.total), 0) / ds.length : null };
+  })
+});
+
+dash.calc('pace', {
+  title: 'الإنجاز مقابل التارقت',
+  description: 'لكل فرع: تارقت الشهر، تارقت الأيام اللي فيها مبيعات، الفعلي، نسبة الإنجاز، والمتوقع آخر الشهر حسب أوزان الأيام.',
+  inputs: ['sales', 'targets'],
+  fn: (sales, targets) => {
+    const days = new Set(sales.map(s => s.day.slice(0, 10)));
+    const wAll = targets.reduce((s, t) => s + Number(t.weight), 0);
+    const wDone = targets.filter(t => days.has(t.day.slice(0, 10))).reduce((s, t) => s + Number(t.weight), 0);
+    return [['khobar', 'الخبر'], ['dammam', 'الدمام']].map(([b, name]) => {
+      const target_month = targets.reduce((s, t) => s + Number(t[b + '_target']), 0);
+      const target_to_date = targets.filter(t => days.has(t.day.slice(0, 10))).reduce((s, t) => s + Number(t[b + '_target']), 0);
+      const actual = sales.reduce((s, d) => s + Number(d[b]), 0);
+      const projected = actual / (wDone / wAll);
+      return { branch: b, name, target_month, target_to_date, actual, pct_to_date: actual / target_to_date, projected, remaining: target_month - actual, projected_pct: projected / target_month };
+    });
+  }
+});
+
+dash.calc('daily_vs_target', {
+  title: 'التارقت اليومي مقابل الفعلي',
+  description: 'تارقت كل يوم مع المبيعات الفعلية لنفس اليوم لكل فرع.',
+  inputs: ['sales', 'targets'],
+  fn: (sales, targets) => targets.map(t => {
+    const s = sales.find(x => x.day.slice(0, 10) === t.day.slice(0, 10));
+    return { day: t.day, weight: Number(t.weight), khobar_target: Number(t.khobar_target), dammam_target: Number(t.dammam_target),
+      khobar_actual: s ? Number(s.khobar) : null, dammam_actual: s ? Number(s.dammam) : null, thu_fri: Number(t.thu_fri), slow_period: Number(t.slow_period) };
+  })
+});
+
+dash.calc('cumulative', {
+  title: 'التراكمي مقابل التارقت',
+  description: 'مجموع تراكمي يومي للتارقت وللمبيعات الفعلية لكل فرع.',
+  inputs: ['sales', 'targets'],
+  fn: (sales, targets) => {
+    let kt = 0, dt = 0, ka = 0, da = 0;
+    return targets.slice().sort((a, b) => a.day < b.day ? -1 : 1).map(t => {
+      const s = sales.find(x => x.day.slice(0, 10) === t.day.slice(0, 10));
+      kt += Number(t.khobar_target); dt += Number(t.dammam_target);
+      if (s) { ka += Number(s.khobar); da += Number(s.dammam); }
+      return { day: t.day, khobar_target_cum: kt, dammam_target_cum: dt, khobar_actual_cum: s ? ka : null, dammam_actual_cum: s ? da : null, slow_period: Number(t.slow_period) };
+    });
+  }
+});
+
+dash.calc('prod_summary', {
+  title: 'ملخص المنتجات',
+  description: 'مجموع المبيعات والقطع وعدد المنتجات ومتوسط سعر القطعة، وكم منتج يجيب ٨٠٪ من المبيعات.',
+  inputs: ['products'],
+  fn: (products) => {
+    const sales = products.reduce((s, p) => s + Number(p.sales), 0), qty = products.reduce((s, p) => s + Number(p.qty), 0);
+    const sorted = products.map(p => Number(p.sales)).sort((a, b) => b - a);
+    let c = 0, n80 = 0; for (const v of sorted) { c += v; n80++; if (c >= 0.8 * sales) break; }
+    return [{ sales, qty, items: products.length, avg_price: sales / qty, n80, top2_share: (sorted[0] + sorted[1]) / sales }];
+  }
+});
+
+dash.calc('by_category', {
+  title: 'المبيعات حسب الفئة',
+  description: 'عدد المنتجات والقطع والمبيعات وحصة المبيعات لكل فئة.',
+  inputs: ['products'],
+  fn: (products) => {
+    const total = products.reduce((s, p) => s + Number(p.sales), 0);
+    const cats = [...new Set(products.map(p => p.category))];
+    return cats.map(category => {
+      const ps = products.filter(p => p.category === category), sales = ps.reduce((s, p) => s + Number(p.sales), 0);
+      return { category, items: ps.length, qty: ps.reduce((s, p) => s + Number(p.qty), 0), sales, share: sales / total };
+    }).sort((a, b) => b.sales - a.sales);
+  }
+});
+
+dash.calc('pareto', {
+  title: 'تركّز المبيعات',
+  description: 'المنتجات مرتبة حسب المبيعات مع الحصة التراكمية من الإجمالي.',
+  inputs: ['products'],
+  fn: (products) => {
+    const total = products.reduce((s, p) => s + Number(p.sales), 0);
+    let c = 0;
+    return products.slice().sort((a, b) => Number(b.sales) - Number(a.sales)).map((p, i) => {
+      c += Number(p.sales);
+      return { product: p.product, category: p.category, rank: i + 1, sales: Number(p.sales), cum_share: c / total };
+    });
+  }
+});
+
+/* ================= helpers ================= */
+const money = d3.format(',.2f'), money0 = d3.format(',.0f'), pct = d3.format('.1%'), pct0 = d3.format('.0%'), intf = d3.format(',');
+const compact = v => Math.abs(v) >= 10000 ? new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }).format(v) : money0(v);
+const wdName = new Intl.DateTimeFormat('ar', { weekday: 'long', timeZone: 'UTC' });
+const WD = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+const toDate = s => new Date(String(s).slice(0, 10) + 'T00:00:00Z');
+const dayLabel = s => { const d = toDate(s); return wdName.format(d) + ' ' + d.getUTCDate() + ' أكتوبر'; };
+const C = i => dash.colors[i];
+const unskel = sel => document.querySelectorAll(sel).forEach(e => e.classList.remove('dash-skeleton'));
+const fail = el => { el.classList.remove('dash-skeleton'); el.innerHTML = ''; const f = document.createElement('div'); f.className = 'px-fail'; f.textContent = 'Failed to load'; el.appendChild(f); };
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+const firstDraw = {};
+const anim = (key) => { if (firstDraw[key]) return false; firstDraw[key] = true; return true; };
+
+const fmtField = (f, v) => {
+  if (v == null || v === '') return '—';
+  if (/share|pct|margin/.test(f)) return pct(v);
+  if (f === 'change' || f === 'lift') return (v >= 0 ? '+' : '') + pct(v);
+  if (/_day$/.test(f)) return dayLabel(v);
+  if (f === 'items' || f === 'qty' || f === 'n80') return intf(v);
+  if (/total|avg|actual|target|projected|remaining|khobar|dammam/.test(f)) return money0(v);
+  return money(v);
+};
+const fillMarks = (id) => {
+  const D = dash.data(id);
+  const els = document.querySelectorAll(`[data-source="${id}"][data-field]:not(th)`);
+  if (D.status !== 'ok' || !D.data.length) { els.forEach(e => { if (!e.closest('table')) e.textContent = '—'; }); if (D.status === 'error') els.forEach(e => e.classList.remove('dash-skeleton')); return null; }
+  els.forEach(e => {
+    if (e.closest('table')) return;
+    const f = e.dataset.field; let row = D.data[0];
+    if (e.dataset.where) { const [k, v] = e.dataset.where.split('='); row = D.data.find(r => String(r[k]) === decodeURIComponent(v)); }
+    else if (e.dataset.row) row = D.data[Number(e.dataset.row)];
+    e.textContent = row ? fmtField(f, row[f]) : '—';
+  });
+  unskel(`[data-source="${id}"][data-field]`);
+  return D.data;
+};
+
+const makeTip = box => { const t = el('div', 'px-tip'); box.appendChild(t); return t; };
+const showTip = (tip, box, ev, head, lines) => {
+  tip.innerHTML = '';
+  tip.appendChild(el('div', 'd', head));
+  lines.forEach(([n, v, c, bold]) => {
+    const l = el('div', 'l'); const a = el('span');
+    if (c) { const i = el('i'); i.style.background = c; a.appendChild(i); }
+    a.appendChild(document.createTextNode(n)); l.appendChild(a);
+    const b = el(bold ? 'b' : 'span', null, v); l.appendChild(b); tip.appendChild(l);
+  });
+  tip.style.display = 'block';
+  const [px, py] = d3.pointer(ev, box), tw = tip.offsetWidth, th = tip.offsetHeight;
+  let left = px + 14; if (left + tw > box.clientWidth) left = px - tw - 14; if (left < 0) left = 0;
+  let top = py - th - 10; if (top < 0) top = py + 14;
+  tip.style.left = left + 'px'; tip.style.top = top + 'px';
+};
+const measure = (svg, txt, size = 12) => { const t = svg.append('text').attr('font-size', size).text(txt); const w = t.node().getComputedTextLength(); t.remove(); return w; };
+const yAxis = (svg, y, x0, x1, ticks = 5, fmt = d3.format('~s')) => {
+  const t = y.ticks(ticks);
+  svg.append('g').selectAll('line').data(t).join('line').attr('x1', x0).attr('x2', x1).attr('y1', d => y(d)).attr('y2', d => y(d)).attr('stroke', 'var(--cds-chart-grid)');
+  svg.append('g').selectAll('text').data(t).join('text').attr('x', x0 - 8).attr('y', d => y(d)).attr('dy', '0.32em').attr('text-anchor', 'end').attr('fill', 'var(--color-fg-muted)').attr('font-size', 12).text(fmt);
+};
+const gradient = (svg, id, color) => {
+  const g = svg.append('defs').append('linearGradient').attr('id', id).attr('x1', 0).attr('x2', 0).attr('y1', 0).attr('y2', 1);
+  [[0, .26], [.25, .16], [.5, .08], [.75, .03], [1, 0]].forEach(([o, a]) => g.append('stop').attr('offset', o).attr('style', `stop-color:${color}; stop-opacity:${a}`));
+  return `url(#${id})`;
+};
+const prepBox = (box) => { box.classList.remove('dash-skeleton'); box.innerHTML = ''; return box.clientWidth; };
+
+/* ================= tabs ================= */
+let activeTab = 't-daily';
+document.querySelectorAll('.px-tabs button').forEach(b => b.addEventListener('click', () => {
+  activeTab = b.dataset.tab;
+  document.querySelectorAll('.px-tabs button').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+  document.querySelectorAll('.px-panel').forEach(p => p.hidden = p.id !== activeTab);
+  dash.setLink(activeTab);
+  drawAll();
+}));
+
+/* ================= TAB 1 ================= */
+let lastLbl = '';
+const arN = n => Number(n).toLocaleString('ar-SA');
+function drawRange() {
+  const D = dash.data('sales');
+  if (D.status !== 'ok' || !D.data.length) return;
+  const ds = D.data.map(d => toDate(d.day)).sort((a, b) => a - b), a = ds[0].getUTCDate(), b = ds[ds.length - 1].getUTCDate();
+  lastLbl = arN(b) + ' أكتوبر';
+  document.querySelectorAll('.px-range').forEach(e => e.textContent = arN(a) + ' – ' + arN(b) + ' أكتوبر');
+  document.querySelectorAll('.px-range-s').forEach(e => e.textContent = arN(a) + '–' + arN(b));
+  document.querySelectorAll('.px-ndays').forEach(e => e.textContent = arN(ds.length));
+}
+function drawDaily() {
+  const S = fillMarks('summary');
+  const W = fillMarks('weekend');
+  const WW = fillMarks('wow');
+  const take = document.getElementById('take');
+  take.classList.remove('dash-skeleton'); take.innerHTML = '';
+  if (W && S) {
+    take.style.setProperty('--px-accent', C(0));
+    take.insertAdjacentHTML('afterbegin', '<svg><use href="#i-bulb"/></svg>');
+    take.appendChild(el('div', null, `الخميس والجمعة هم أقوى أيام البيع: متوسطهم أعلى بـ ${pct0(W[0].lift)} من باقي الأيام. والدمام يجيب ${pct0(S[0].dammam_share)} من المبيعات.`));
+  }
+  if (WW) { const p = document.getElementById('wow-pill'); const v = WW[0].change; p.className = 'px-pill ' + (v == null ? 'mute' : v >= 0 ? 'ok' : 'bad'); }
+
+  // donut
+  const dbox = document.getElementById('donut');
+  if (S && dbox.clientWidth) {
+    const w = prepBox(dbox), size = Math.min(w, 200), R = size / 2;
+    const svg = d3.select(dbox).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${w} ${size}`);
+    const g = svg.append('g').attr('transform', `translate(${w / 2},${R})`);
+    const data = [{ v: S[0].khobar, c: C(0) }, { v: S[0].dammam, c: C(1) }];
+    const arcs = d3.pie().value(d => d.v).sort(null).padAngle(0.02)(data);
+    g.selectAll('path').data(arcs).join('path').attr('d', d3.arc().innerRadius(R * 0.68).outerRadius(R).cornerRadius(6)).attr('fill', d => d.data.c).attr('class', anim('donut') ? 'anim-f' : null);
+    g.append('text').attr('text-anchor', 'middle').attr('dy', '-0.1em').attr('font-size', 22).attr('font-family', 'var(--font-anthropic-serif)').attr('fill', 'var(--color-fg)').text(compact(S[0].total));
+    g.append('text').attr('text-anchor', 'middle').attr('dy', '1.5em').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text('ر.س إجمالي');
+  } else if (dash.data('summary').status === 'error') fail(dbox);
+
+  const D = dash.data('sales');
+  const box = document.getElementById('chart'), tbody = document.querySelector('#tbl tbody'), spark = document.getElementById('spark-total');
+  if (D.status !== 'ok') { box.innerHTML = ''; tbody.innerHTML = ''; spark.innerHTML = ''; if (D.status === 'error' || D.status === 'connect') fail(box); return; }
+  const rows = D.data.map(d => ({ day: d.day, date: toDate(d.day), k: Number(d.khobar), m: Number(d.dammam), t: Number(d.total) })).sort((a, b) => a.date - b.date);
+
+  // sparkline
+  if (spark.clientWidth) {
+    const w = prepBox(spark), h = 38;
+    const svg = d3.select(spark).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${w} ${h}`);
+    const x = d3.scaleLinear([0, rows.length - 1], [2, w - 2]), y = d3.scaleLinear([0, d3.max(rows, d => d.t)], [h - 2, 4]);
+    svg.append('path').attr('d', d3.area().x((d, i) => x(i)).y0(h).y1(d => y(d.t))(rows)).attr('fill', gradient(svg, 'gsp', C(0)));
+    svg.append('path').attr('d', d3.line().x((d, i) => x(i)).y(d => y(d.t))(rows)).attr('fill', 'none').attr('stroke', C(0)).attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round');
+    svg.append('circle').attr('cx', x(rows.length - 1)).attr('cy', y(rows[rows.length - 1].t)).attr('r', 3).attr('fill', C(0));
+  }
+
+  // grouped bars
+  if (box.clientWidth) {
+    const W0 = prepBox(box), H = 300, mb = 30, mt = 10;
+    const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W0} ${H}`);
+    const y = d3.scaleLinear([0, d3.max(rows, d => Math.max(d.k, d.m)) * 1.1], [H - mb, mt]).nice();
+    const ml = measure(svg, d3.format('~s')(y.domain()[1])) + 14;
+    const x = d3.scaleBand(rows.map(d => d.day), [ml, W0 - 4]).paddingInner(0.28).paddingOuter(0.1);
+    // weekend bands
+    svg.append('g').selectAll('rect').data(rows.filter(d => [4, 5].includes(d.date.getUTCDay()))).join('rect')
+      .attr('x', d => x(d.day) - x.step() * x.paddingInner() / 2).attr('width', x.step()).attr('y', mt).attr('height', H - mb - mt).attr('fill', 'var(--cds-chart-grid)').attr('opacity', 0.55);
+    yAxis(svg, y, ml, W0 - 4);
+    const step = x.bandwidth() < 22 ? 2 : 1;
+    svg.append('g').selectAll('text').data(rows.filter((d, i) => i % step === 0)).join('text').attr('x', d => x(d.day) + x.bandwidth() / 2).attr('y', H - 10).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').attr('font-size', 12).text(d => d.date.getUTCDate());
+    svg.append('line').attr('x1', ml).attr('x2', W0 - 4).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--cds-chart-axis)');
+    const inner = d3.scaleBand(['k', 'm'], [0, x.bandwidth()]).padding(0.12);
+    const bw = Math.min(16, inner.bandwidth()), off = (inner.bandwidth() - bw) / 2;
+    const a = anim('bars');
+    const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', d => `translate(${x(d.day)},0)`);
+    [['k', 0], ['m', 1]].forEach(([key, ci]) => g.append('rect').attr('x', inner(key) + off).attr('width', bw).attr('y', d => y(d[key])).attr('height', d => y(0) - y(d[key])).attr('rx', Math.min(4, bw / 2)).attr('fill', C(ci)).attr('class', a ? 'anim-y' : null));
+    const tip = makeTip(box);
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', d => x(d.day) - x.step() * x.paddingInner() / 2).attr('width', x.step()).attr('y', 0).attr('height', H - mb).attr('fill', 'transparent')
+      .on('mousemove', (ev, d) => { g.attr('opacity', r => r === d ? 1 : 0.4); showTip(tip, box, ev, dayLabel(d.day), [['الخبر', money(d.k), C(0)], ['الدمام', money(d.m), C(1)], ['الإجمالي', money(d.t) + ' ر.س', null, true]]); })
+      .on('mouseleave', () => { g.attr('opacity', 1); tip.style.display = 'none'; });
+  }
+
+  // table
+  const maxK = d3.max(rows, d => d.k), maxM = d3.max(rows, d => d.m), maxT = d3.max(rows, d => d.t);
+  tbody.innerHTML = '';
+  rows.forEach(d => {
+    const tr = el('tr'); tr.dataset.key = d.day;
+    [[dayLabel(d.day), false], [money(d.k), d.k === maxK], [money(d.m), d.m === maxM]].forEach(([v, hi]) => tr.appendChild(el('td', hi ? 'hi' : '', v)));
+    const td = el('td'); const cb = el('div', 'cellbar'); const i = el('i'); i.style.width = (d.t / maxT * 70) + 'px'; i.style.background = C(0);
+    cb.appendChild(i); cb.appendChild(el('span', d.t === maxT ? 'ok' : '', money(d.t))); td.appendChild(cb); tr.appendChild(td);
+    tbody.appendChild(tr);
+  });
+}
+
+function drawWeekday() {
+  const D = dash.data('by_weekday'), box = document.getElementById('wdchart');
+  if (D.status !== 'ok') { box.innerHTML = ''; if (D.status === 'error') fail(box); return; }
+  if (!box.clientWidth) return;
+  const rows = D.data.filter(d => d.avg_total != null);
+  const W0 = prepBox(box), H = 260, mb = 28, mt = 22;
+  const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W0} ${H}`);
+  const short = ['أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
+  const x = d3.scaleBand(rows.map(d => d.weekday), [4, W0 - 4]).padding(0.3);
+  const y = d3.scaleLinear([0, d3.max(rows, d => d.avg_total) * 1.12], [H - mb, mt]);
+  const bw = Math.min(32, x.bandwidth()), a = anim('wd');
+  const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', d => `translate(${x(d.weekday) + (x.bandwidth() - bw) / 2},0)`);
+  g.append('rect').attr('width', bw).attr('y', d => y(d.avg_total)).attr('height', d => y(0) - y(d.avg_total)).attr('rx', 6)
+    .attr('fill', d => (d.weekday === 4 || d.weekday === 5) ? C(0) : 'var(--cds-chart-muted)').attr('class', a ? 'anim-y' : null);
+  g.append('text').attr('x', bw / 2).attr('y', d => y(d.avg_total) - 6).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(d => compact(d.avg_total));
+  g.append('text').attr('x', bw / 2).attr('y', H - 8).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => short[d.weekday]);
+  svg.append('line').attr('x1', 4).attr('x2', W0 - 4).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--cds-chart-axis)');
+}
+
+/* ================= TAB 2 ================= */
+function drawTarget() {
+  const P = fillMarks('pace');
+  const take = document.getElementById('take2');
+  take.classList.remove('dash-skeleton'); take.innerHTML = '';
+  if (P) {
+    const k = P.find(r => r.branch === 'khobar'), m = P.find(r => r.branch === 'dammam');
+    take.style.setProperty('--px-accent', 'var(--color-warn)');
+    take.insertAdjacentHTML('afterbegin', '<svg><use href="#i-target"/></svg>');
+    take.appendChild(el('div', null, `لين ${lastLbl}: الخبر حقق ${pct0(k.pct_to_date)} من تارقت الأيام اللي مضت، والدمام ${pct0(m.pct_to_date)}. بنفس الوتيرة يقفل الخبر الشهر على ${pct0(k.projected_pct)} من التارقت، والدمام على ${pct0(m.projected_pct)}.`));
+    P.forEach(r => {
+      const card = document.querySelector(`.px-card[data-branch="${r.branch}"]`);
+      const st = card.querySelector('.st');
+      const lvl = r.pct_to_date >= 1 ? ['ok', 'على المسار'] : r.pct_to_date >= 0.85 ? ['warn', 'قريب'] : ['bad', 'متأخر'];
+      st.className = 'px-pill st ' + lvl[0]; st.textContent = lvl[1];
+      const gbox = card.querySelector('.px-gauge');
+      if (!gbox.clientWidth) return;
+      const w = prepBox(gbox), size = Math.min(w, 170), R = size / 2, color = r.branch === 'khobar' ? C(0) : C(1);
+      const svg = d3.select(gbox).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${w} ${size}`);
+      const g = svg.append('g').attr('transform', `translate(${w / 2},${R})`);
+      const arc = d3.arc().innerRadius(R * 0.78).outerRadius(R).cornerRadius(R);
+      g.append('path').attr('d', arc({ startAngle: 0, endAngle: 2 * Math.PI })).attr('fill', 'var(--cds-chart-grid)');
+      g.append('path').attr('d', arc({ startAngle: 0, endAngle: 2 * Math.PI * Math.min(1, r.projected_pct) })).attr('fill', color).attr('opacity', 0.3);
+      g.append('path').attr('d', arc({ startAngle: 0, endAngle: 2 * Math.PI * Math.min(1, r.pct_to_date) })).attr('fill', color).attr('class', anim('g' + r.branch) ? 'anim-f' : null);
+      g.append('text').attr('text-anchor', 'middle').attr('dy', '0.05em').attr('font-size', 30).attr('font-family', 'var(--font-anthropic-serif)').attr('fill', 'var(--color-fg)').text(pct0(r.pct_to_date));
+      g.append('text').attr('text-anchor', 'middle').attr('dy', '2em').attr('font-size', 10).attr('fill', 'var(--color-fg-muted)').text('من الأيام اللي مضت');
+    });
+  } else { document.querySelectorAll('.px-gauge').forEach(g => { g.innerHTML = ''; if (dash.data('pace').status === 'error') fail(g); }); }
+
+  // cumulative
+  const CU = dash.data('cumulative'), cbox = document.getElementById('cumchart');
+  if (CU.status !== 'ok') { cbox.innerHTML = ''; if (CU.status === 'error') fail(cbox); }
+  else if (cbox.clientWidth) {
+    const rows = CU.data.map(d => ({ ...d, date: toDate(d.day) })).sort((a, b) => a.date - b.date);
+    const W0 = prepBox(cbox), H = 340, mb = 30, mt = 14;
+    const svg = d3.select(cbox).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W0} ${H}`);
+    const y = d3.scaleLinear([0, d3.max(rows, d => Math.max(d.khobar_target_cum, d.dammam_target_cum)) * 1.05], [H - mb, mt]).nice();
+    const ml = measure(svg, d3.format('~s')(y.domain()[1])) + 14;
+    const endW = measure(svg, '400.0K التارقت') + 16;
+    const x = d3.scaleUtc([rows[0].date, rows[rows.length - 1].date], [ml, W0 - endW]);
+    const slow = rows.filter(r => r.slow_period === 1);
+    if (slow.length) {
+      const x0 = x(d3.utcDay.offset(slow[0].date, -0.5)), x1 = x(d3.utcDay.offset(slow[slow.length - 1].date, 0.5));
+      svg.append('rect').attr('x', x0).attr('width', x1 - x0).attr('y', mt).attr('height', H - mb - mt).attr('fill', 'var(--cds-chart-grid)').attr('opacity', 0.55);
+      svg.append('text').attr('x', (x0 + x1) / 2).attr('y', mt + 14).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text('ركود');
+    }
+    yAxis(svg, y, ml, W0 - endW);
+    const days = [1, 5, 10, 15, 20, 25, 31].map(n => new Date(Date.UTC(2026, 9, n)));
+    svg.append('g').selectAll('text').data(days).join('text').attr('x', d => x(d)).attr('y', H - 10).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => d.getUTCDate());
+    svg.append('line').attr('x1', ml).attr('x2', W0 - endW).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--cds-chart-axis)');
+    svg.append('path').attr('d', d3.line().x(d => x(d.date)).y(d => y(d.khobar_target_cum))(rows)).attr('fill', 'none').attr('stroke', 'var(--cds-chart-reference)').attr('stroke-width', 2).attr('stroke-dasharray', '6 5');
+    const act = rows.filter(d => d.khobar_actual_cum != null);
+    const a = anim('cum');
+    [['khobar_actual_cum', 0], ['dammam_actual_cum', 1]].forEach(([k, ci], idx) => {
+      svg.append('path').attr('d', d3.area().x(d => x(d.date)).y0(y(0)).y1(d => y(d[k]))(act)).attr('fill', gradient(svg, 'gc' + idx, C(ci))).attr('class', a ? 'anim-f' : null);
+      svg.append('path').attr('d', d3.line().x(d => x(d.date)).y(d => y(d[k]))(act)).attr('fill', 'none').attr('stroke', C(ci)).attr('stroke-width', 2.5).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round').attr('class', a ? 'anim-f' : null);
+    });
+    // end labels
+    const last = act[act.length - 1], lastT = rows[rows.length - 1];
+    const labels = [
+      { y: y(last.khobar_actual_cum), x: x(last.date), t: compact(last.khobar_actual_cum) + ' الخبر', c: C(0) },
+      { y: y(last.dammam_actual_cum), x: x(last.date), t: compact(last.dammam_actual_cum) + ' الدمام', c: C(1) }
+    ].sort((p, q) => p.y - q.y);
+    if (labels[1].y - labels[0].y < 16) { const mid = (labels[0].y + labels[1].y) / 2; labels[0].y = mid - 8; labels[1].y = mid + 8; }
+    labels.forEach(l => { svg.append('circle').attr('cx', l.x).attr('cy', l.y).attr('r', 4).attr('fill', l.c).attr('stroke', 'var(--color-panel)').attr('stroke-width', 2); svg.append('text').attr('x', l.x + 8).attr('y', l.y).attr('dy', '0.32em').attr('font-size', 12).attr('fill', l.c).text(l.t); });
+    svg.append('text').attr('x', x(lastT.date) + 6).attr('y', y(lastT.khobar_target_cum)).attr('dy', '0.32em').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(compact(lastT.khobar_target_cum) + ' التارقت');
+    // hover
+    const tip = makeTip(cbox), rule = svg.append('line').attr('y1', mt).attr('y2', H - mb).attr('stroke', 'var(--cds-chart-axis)').attr('opacity', 0);
+    const bis = d3.bisector(d => d.date).center;
+    svg.append('rect').attr('x', ml).attr('width', W0 - endW - ml).attr('y', 0).attr('height', H - mb).attr('fill', 'transparent')
+      .on('mousemove', function (ev) {
+        const [mx] = d3.pointer(ev, this); const d = rows[bis(rows, x.invert(mx))];
+        rule.attr('x1', x(d.date)).attr('x2', x(d.date)).attr('opacity', 1);
+        const lines = [['تارقت كل فرع', money0(d.khobar_target_cum), 'var(--cds-chart-reference)']];
+        if (d.khobar_actual_cum != null) { lines.push(['الخبر', money0(d.khobar_actual_cum) + ' (' + pct0(d.khobar_actual_cum / d.khobar_target_cum) + ')', C(0)]); lines.push(['الدمام', money0(d.dammam_actual_cum) + ' (' + pct0(d.dammam_actual_cum / d.dammam_target_cum) + ')', C(1)]); }
+        showTip(tip, cbox, ev, 'لين ' + dayLabel(d.day), lines);
+      })
+      .on('mouseleave', () => { rule.attr('opacity', 0); tip.style.display = 'none'; });
+  }
+
+  // calendar
+  const DV = dash.data('daily_vs_target'), cal = document.getElementById('cal');
+  if (DV.status !== 'ok') { cal.innerHTML = ''; if (DV.status === 'error') fail(cal); return; }
+  cal.classList.remove('dash-skeleton'); cal.innerHTML = '';
+  const rows = DV.data.map(d => ({ ...d, date: toDate(d.day) })).sort((a, b) => a.date - b.date);
+  const maxW = d3.max(rows, d => d.weight), minW = d3.min(rows, d => d.weight);
+  const lastActual = d3.max(rows.filter(r => r.khobar_actual != null), r => r.date);
+  for (let i = 0; i < rows[0].date.getUTCDay(); i++) cal.appendChild(el('div', 'px-day blank'));
+  rows.forEach(r => {
+    const c = el('div', 'px-day' + (lastActual && +r.date === +lastActual ? ' today' : ''));
+    const t = (r.weight - minW) / (maxW - minW || 1);
+    c.style.background = `color-mix(in srgb, ${C(0)} ${Math.round(4 + t * 26)}%, var(--color-panel))`;
+    const n = el('div', 'n'); n.appendChild(el('span', null, String(r.date.getUTCDate())));
+    if (r.slow_period) n.appendChild(el('span', null, 'ركود')); else if (r.thu_fri) n.appendChild(el('span', null, '★'));
+    c.appendChild(n);
+    c.appendChild(el('div', 't', compact(r.khobar_target)));
+    if (r.khobar_actual != null) {
+      const p = (r.khobar_actual + r.dammam_actual) / (r.khobar_target + r.dammam_target);
+      c.appendChild(el('div', 'a ' + (p >= 1 ? 'ok' : p >= 0.85 ? 'warn' : 'bad'), pct0(p) + ' محقق'));
+    } else c.appendChild(el('div', 'a', ' '));
+    c.title = '';
+    cal.appendChild(c);
+  });
+}
+
+/* ================= TAB 3 ================= */
+let catOrder = [];
+const catColor = c => { const i = catOrder.indexOf(c); return i < 0 ? 'var(--cds-chart-muted)' : i < 6 ? C(i) : 'var(--cds-chart-muted)'; };
+let sortKey = 'sales', sortDir = -1;
+document.querySelectorAll('#ptbl th button').forEach(b => b.addEventListener('click', () => {
+  const k = b.dataset.k; if (sortKey === k) sortDir *= -1; else { sortKey = k; sortDir = (k === 'product' || k === 'category') ? 1 : -1; }
+  drawProdTable();
+}));
+document.getElementById('psearch').addEventListener('input', () => drawProdTable());
+
+function drawProdTable() {
+  const D = dash.data('products'), tb = document.querySelector('#ptbl tbody');
+  tb.innerHTML = '';
+  document.querySelectorAll('#ptbl th').forEach(th => th.setAttribute('aria-sort', th.dataset.field === sortKey ? (sortDir > 0 ? 'ascending' : 'descending') : 'none'));
+  if (D.status !== 'ok') return;
+  const q = document.getElementById('psearch').value.trim().toLowerCase();
+  const num = ['qty', 'sales'];
+  const rows = D.data.filter(p => !q || p.product.toLowerCase().includes(q) || p.category.includes(q))
+    .slice().sort((a, b) => num.includes(sortKey) ? sortDir * (Number(a[sortKey]) - Number(b[sortKey])) : sortDir * String(a[sortKey]).localeCompare(String(b[sortKey])));
+  document.getElementById('pcount').textContent = rows.length + ' من ' + D.data.length + ' منتج';
+  const maxS = d3.max(D.data, p => Number(p.sales));
+  rows.forEach(p => {
+    const tr = el('tr'); tr.dataset.key = p.product;
+    tr.appendChild(el('td', 'prod', p.product));
+    const tc = el('td'); const tag = el('span', 'tag'); const dot = el('i'); dot.style.background = catColor(p.category); tag.appendChild(dot); tag.appendChild(document.createTextNode(p.category)); tc.appendChild(tag); tr.appendChild(tc);
+    tr.appendChild(el('td', '', intf(Number(p.qty))));
+    const s = Number(p.sales), td = el('td'), cb = el('div', 'cellbar'), bar = el('i');
+    bar.style.width = Math.max(2, s / maxS * 80) + 'px'; bar.style.background = catColor(p.category);
+    cb.appendChild(bar); cb.appendChild(el('span', '', money(s))); td.appendChild(cb); tr.appendChild(td);
+    tb.appendChild(tr);
+  });
+}
+
+function hbars(box, data, val, fmt, key) {
+  const W0 = prepBox(box), rowH = 32, H = data.length * rowH;
+  const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W0} ${H}`);
+  const short = s => s.length > 22 ? s.slice(0, 21) + '…' : s;
+  const ml = Math.min(W0 * 0.5, d3.max(data, p => measure(svg, short(p.product))) + 10);
+  const valW = measure(svg, fmt(val(data[0]))) + 10;
+  const x = d3.scaleLinear([0, val(data[0])], [ml, W0 - valW]);
+  const y = d3.scaleBand(data.map(p => p.product), [0, H]).padding(0.3);
+  const a = anim(key);
+  const g = svg.append('g').selectAll('g').data(data).join('g').attr('transform', p => `translate(0,${y(p.product)})`);
+  g.append('text').attr('x', ml - 8).attr('y', y.bandwidth() / 2).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg)').text(p => short(p.product));
+  g.append('rect').attr('x', ml).attr('height', y.bandwidth()).attr('width', W0 - valW - ml).attr('rx', 5).attr('fill', 'var(--cds-chart-grid)').attr('opacity', 0.5);
+  g.append('rect').attr('x', ml).attr('height', y.bandwidth()).attr('width', p => Math.max(2, x(val(p)) - ml)).attr('rx', 5).attr('fill', p => catColor(p.category)).attr('class', a ? 'anim-x' : null);
+  g.append('text').attr('x', p => x(val(p)) + 6).attr('y', y.bandwidth() / 2).attr('dy', '0.32em').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(p => fmt(val(p)));
+}
+
+function drawProd() {
+  const PS = fillMarks('prod_summary');
+  const BC = dash.data('by_category');
+  if (BC.status === 'ok') catOrder = BC.data.map(c => c.category);
+  const take = document.getElementById('take3');
+  take.classList.remove('dash-skeleton'); take.innerHTML = '';
+  if (PS && BC.status === 'ok') {
+    const top = BC.data[0];
+    take.style.setProperty('--px-accent', C(0));
+    take.insertAdjacentHTML('afterbegin', '<svg><use href="#i-bulb"/></svg>');
+    take.appendChild(el('div', null, `${top.category} تجيب ${pct0(top.share)} من المبيعات. وأعلى منتجين لحالهم يجيبون ${pct0(PS[0].top2_share)}، و${PS[0].n80} منتج بس من أصل ${PS[0].items} يجيبون ٨٠٪ من المبيعات.`));
+  }
+
+  // category donut + rows
+  const cd = document.getElementById('catdonut'), cr = document.getElementById('catrows');
+  if (BC.status === 'ok') {
+    cr.innerHTML = '';
+    BC.data.forEach(c => {
+      const r = el('div', 'px-row'); const a = el('span'); const sw = el('i', 'px-sw'); sw.style.background = catColor(c.category); a.appendChild(sw); a.appendChild(document.createTextNode(c.category + ' · ' + c.items));
+      r.appendChild(a); r.appendChild(el('b', null, compact(c.sales) + ' · ' + pct0(c.share))); cr.appendChild(r);
+    });
+    if (cd.clientWidth) {
+      const w = prepBox(cd), size = Math.min(w, 200), R = size / 2;
+      const svg = d3.select(cd).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${w} ${size}`);
+      const g = svg.append('g').attr('transform', `translate(${w / 2},${R})`);
+      const arcs = d3.pie().value(d => d.sales).sort(null).padAngle(0.015)(BC.data);
+      g.selectAll('path').data(arcs).join('path').attr('d', d3.arc().innerRadius(R * 0.68).outerRadius(R).cornerRadius(4)).attr('fill', d => catColor(d.data.category)).attr('class', anim('catd') ? 'anim-f' : null);
+      g.append('text').attr('text-anchor', 'middle').attr('dy', '-0.1em').attr('font-size', 22).attr('font-family', 'var(--font-anthropic-serif)').attr('fill', 'var(--color-fg)').text(pct0(BC.data[0].share));
+      g.append('text').attr('text-anchor', 'middle').attr('dy', '1.5em').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(BC.data[0].category);
+    }
+  } else if (BC.status === 'error') { fail(cd); }
+
+  // pareto
+  const PA = dash.data('pareto'), pbox = document.getElementById('pareto');
+  if (PA.status !== 'ok') { pbox.innerHTML = ''; if (PA.status === 'error') fail(pbox); }
+  else if (pbox.clientWidth) {
+    const rows = PA.data;
+    const W0 = prepBox(pbox), H = 340, mb = 28, mt = 14;
+    const svg = d3.select(pbox).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W0} ${H}`);
+    const y = d3.scaleLinear([0, rows[0].sales * 1.05], [H - mb, mt]).nice();
+    const y2 = d3.scaleLinear([0, 1], [H - mb, mt]);
+    const ml = measure(svg, d3.format('~s')(y.domain()[1])) + 14, mr = measure(svg, '100%') + 12;
+    const x = d3.scaleBand(rows.map(d => d.rank), [ml, W0 - mr]).padding(0.2);
+    yAxis(svg, y, ml, W0 - mr);
+    svg.append('g').selectAll('text').data([0, .5, .8, 1]).join('text').attr('x', W0 - mr + 8).attr('y', d => y2(d)).attr('dy', '0.32em').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(pct0);
+    svg.append('line').attr('x1', ml).attr('x2', W0 - mr).attr('y1', y2(0.8)).attr('y2', y2(0.8)).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 4');
+    const n80 = rows.findIndex(r => r.cum_share >= 0.8);
+    if (n80 >= 0) {
+      const xx = x(rows[n80].rank) + x.bandwidth() / 2;
+      svg.append('line').attr('x1', xx).attr('x2', xx).attr('y1', y2(0.8)).attr('y2', H - mb).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 4');
+      svg.append('text').attr('x', xx + 6).attr('y', y2(0.8) - 8).attr('font-size', 12).attr('fill', 'var(--color-fg)').text(`${n80 + 1} منتج = ٨٠٪`);
+    }
+    [1, 10, 20, 30, 40, 50, 60, rows.length].filter((v, i, a) => v <= rows.length && a.indexOf(v) === i).forEach(r => svg.append('text').attr('x', x(r) + x.bandwidth() / 2).attr('y', H - 8).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(r));
+    svg.append('line').attr('x1', ml).attr('x2', W0 - mr).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--cds-chart-axis)');
+    const a = anim('pareto');
+    const bars = svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', d => x(d.rank)).attr('width', x.bandwidth()).attr('y', d => y(d.sales)).attr('height', d => y(0) - y(d.sales)).attr('rx', Math.min(3, x.bandwidth() / 2)).attr('fill', d => catColor(d.category)).attr('class', a ? 'anim-y' : null);
+    svg.append('path').attr('d', d3.line().x(d => x(d.rank) + x.bandwidth() / 2).y(d => y2(d.cum_share))(rows)).attr('fill', 'none').attr('stroke', C(1)).attr('stroke-width', 2).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round');
+    const tip = makeTip(pbox);
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', d => x(d.rank) - x.step() * x.paddingInner() / 2).attr('width', x.step()).attr('y', 0).attr('height', H - mb).attr('fill', 'transparent')
+      .on('mousemove', (ev, d) => { bars.attr('opacity', r => r === d ? 1 : 0.35); showTip(tip, pbox, ev, '#' + d.rank + ' · ' + d.product, [['الفئة', d.category, catColor(d.category)], ['المبيعات', money(d.sales) + ' ر.س'], ['التراكمي', pct(d.cum_share), null, true]]); })
+      .on('mouseleave', () => { bars.attr('opacity', 1); tip.style.display = 'none'; });
+  }
+
+  const D = dash.data('products');
+  const tbox = document.getElementById('topbar'), qbox = document.getElementById('topqty'), tree = document.getElementById('tree');
+  const lg = document.getElementById('tree-legend'); lg.innerHTML = '';
+  catOrder.forEach(k => { const s = el('span'); const i = el('i', 'px-sw'); i.style.background = catColor(k); s.appendChild(i); s.appendChild(document.createTextNode(k)); lg.appendChild(s); });
+  if (D.status !== 'ok') { [tbox, qbox, tree].forEach(b => { b.innerHTML = ''; if (D.status === 'error') fail(b); }); drawProdTable(); return; }
+  const prods = D.data.map(p => ({ ...p, q: Number(p.qty), s: Number(p.sales) }));
+
+  if (tbox.clientWidth) hbars(tbox, prods.slice().sort((a, b) => b.s - a.s).slice(0, 10), p => p.s, compact, 'tops');
+  if (qbox.clientWidth) hbars(qbox, prods.slice().sort((a, b) => b.q - a.q).slice(0, 10), p => p.q, intf, 'topq');
+
+  if (tree.clientWidth) {
+    const W0 = prepBox(tree), H = 400;
+    const svg = d3.select(tree).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W0} ${H}`);
+    const root = d3.hierarchy({ children: catOrder.map(k => ({ k, children: prods.filter(p => p.category === k && p.s > 0) })) }).sum(d => d.s || 0).sort((a, b) => b.value - a.value);
+    d3.treemap().size([W0, H]).paddingInner(2).round(true)(root);
+    const leaves = root.leaves(), a = anim('tree');
+    const cell = svg.append('g').selectAll('g').data(leaves).join('g').attr('transform', d => `translate(${d.x0},${d.y0})`);
+    cell.append('rect').attr('width', d => Math.max(0, d.x1 - d.x0)).attr('height', d => Math.max(0, d.y1 - d.y0)).attr('rx', 4).attr('fill', d => catColor(d.data.category)).attr('fill-opacity', 0.85).attr('class', a ? 'anim-f' : null);
+    cell.each(function (d) {
+      const w = d.x1 - d.x0, h = d.y1 - d.y0; if (w < 60 || h < 34) return;
+      const g = d3.select(this), maxCh = Math.floor((w - 12) / 6.4), name = d.data.product.length > maxCh ? d.data.product.slice(0, maxCh - 1) + '…' : d.data.product;
+      g.append('text').attr('x', 6).attr('y', 16).attr('font-size', 11).attr('font-weight', 600).attr('fill', 'var(--color-bg)').text(name);
+      g.append('text').attr('x', 6).attr('y', 30).attr('font-size', 11).attr('fill', 'var(--color-bg)').attr('opacity', 0.9).text(compact(d.data.s) + ' ر.س');
+    });
+    const tip = makeTip(tree);
+    cell.on('mousemove', (ev, d) => { cell.attr('opacity', q => q === d ? 1 : 0.55); showTip(tip, tree, ev, d.data.product, [['الفئة', d.data.category, catColor(d.data.category)], ['الكمية', intf(d.data.q)], ['الحصة', pct(d.data.s / root.value)], ['المبيعات', money(d.data.s) + ' ر.س', null, true]]); })
+      .on('mouseleave', () => { cell.attr('opacity', 1); tip.style.display = 'none'; });
+  }
+  drawProdTable();
+}
+
+/* ===== theme helpers ===== */
+function setTheme() {
+  const root = document.querySelector('.px');
+  ['--a0', '--a1', '--a2', '--a3'].forEach((v, i) => root.style.setProperty(v, C(i)));
+}
+let gid = 0;
+function enhance() {
+  const cols = dash.colors.slice(0, 6);
+  document.querySelectorAll('.px .px-chart svg').forEach(svg => {
+    if (svg.dataset.fx) return; svg.dataset.fx = '1';
+    const s = d3.select(svg); const defs = s.insert('defs', ':first-child'); const id = 'fx' + (gid++);
+    const f = defs.append('filter').attr('id', id + 'glow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
+    f.append('feGaussianBlur').attr('stdDeviation', 3.2).attr('result', 'b');
+    const m = f.append('feMerge'); m.append('feMergeNode').attr('in', 'b'); m.append('feMergeNode').attr('in', 'SourceGraphic');
+    const inTree = svg.closest('#tree');
+    cols.forEach((c, i) => {
+      const v = defs.append('linearGradient').attr('id', `${id}v${i}`).attr('x1', 0).attr('x2', 0).attr('y1', 0).attr('y2', 1);
+      v.append('stop').attr('offset', 0).attr('style', `stop-color:${c};stop-opacity:1`);
+      v.append('stop').attr('offset', 1).attr('style', `stop-color:${c};stop-opacity:${inTree ? .78 : .5}`);
+      const h = defs.append('linearGradient').attr('id', `${id}h${i}`).attr('x1', 0).attr('x2', 1).attr('y1', 0).attr('y2', 0);
+      h.append('stop').attr('offset', 0).attr('style', `stop-color:${c};stop-opacity:.55`);
+      h.append('stop').attr('offset', 1).attr('style', `stop-color:${c};stop-opacity:1`);
+    });
+    s.selectAll('rect').each(function () {
+      const r = d3.select(this), fill = r.attr('fill'), i = cols.indexOf(fill);
+      if (i < 0) return;
+      const wide = (+r.attr('width') || 0) > (+r.attr('height') || 0) * 1.5 && !inTree;
+      r.attr('fill', `url(#${id}${wide ? 'h' : 'v'}${i})`);
+    });
+    s.selectAll('path').each(function () {
+      const p = d3.select(this);
+      if (p.attr('fill') === 'none' && cols.includes(p.attr('stroke'))) {
+        p.attr('filter', `url(#${id}glow)`);
+        if (!p.attr('stroke-dasharray') && !p.node().dataset.drawn) {
+          const L = p.node().getTotalLength(); p.node().dataset.drawn = 1;
+          if (svg.dataset.first === '1') p.attr('stroke-dasharray', L).attr('stroke-dashoffset', L).classed('anim-draw', true);
+        }
+      }
+      const fi = cols.indexOf(p.attr('fill'));
+      if (fi >= 0 && svg.closest('.px-gauge, .px-donut')) p.attr('filter', `url(#${id}glow)`);
+    });
+    s.selectAll('circle').each(function () { const c = d3.select(this); if (cols.includes(c.attr('fill')) && +c.attr('r') <= 5) c.attr('filter', `url(#${id}glow)`); });
+  });
+}
+// mark svgs drawn on a first draw so lines animate once
+const firstSvg = new Set();
+const markFirst = () => document.querySelectorAll('.px .px-chart').forEach(b => { const s = b.querySelector('svg'); if (s && !firstSvg.has(b.id || b)) { firstSvg.add(b.id || b); s.dataset.first = '1'; } });
+
+function drawOrbit() {
+  const D = dash.data('daily_vs_target'), box = document.getElementById('orbit');
+  if (D.status !== 'ok') { box.innerHTML = ''; if (D.status === 'error') fail(box); return; }
+  if (!box.clientWidth) return;
+  const rows = D.data.map(d => ({ ...d, date: toDate(d.day), tt: d.khobar_target + d.dammam_target })).sort((a, b) => a.date - b.date);
+  const W0 = prepBox(box), H = Math.min(W0, 460), R = H / 2 - 30, r0 = R * 0.34;
+  const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W0} ${H}`);
+  const defs = svg.append('defs');
+  const rg = defs.append('radialGradient').attr('id', 'orb-core');
+  rg.append('stop').attr('offset', 0).attr('style', `stop-color:${C(0)};stop-opacity:.28`);
+  rg.append('stop').attr('offset', 1).attr('style', `stop-color:${C(1)};stop-opacity:0`);
+  const glow = defs.append('filter').attr('id', 'orb-glow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
+  glow.append('feGaussianBlur').attr('stdDeviation', 4).attr('result', 'b');
+  const gm = glow.append('feMerge'); gm.append('feMergeNode').attr('in', 'b'); gm.append('feMergeNode').attr('in', 'SourceGraphic');
+  [0, 1].forEach(i => { const g = defs.append('radialGradient').attr('id', 'orb-g' + i).attr('cx', W0 / 2).attr('cy', H / 2).attr('r', R).attr('gradientUnits', 'userSpaceOnUse');
+    g.append('stop').attr('offset', r0 / R).attr('style', `stop-color:${C(i)};stop-opacity:.55`); g.append('stop').attr('offset', 1).attr('style', `stop-color:${C(i)};stop-opacity:1`); });
+  const g = svg.append('g').attr('transform', `translate(${W0 / 2},${H / 2})`);
+  const maxV = d3.max(rows, d => Math.max(d.tt, (d.khobar_actual || 0) + (d.dammam_actual || 0)));
+  const y = d3.scaleRadial([0, maxV], [r0, R]);
+  const x = d3.scaleBand(rows.map(d => d.day), [0, 2 * Math.PI]).padding(0.14);
+  g.append('circle').attr('r', R + 8).attr('fill', 'url(#orb-core)');
+  [0.25, 0.5, 0.75, 1].forEach(t => g.append('circle').attr('r', y(maxV * t)).attr('fill', 'none').attr('stroke', 'var(--cds-chart-grid)').attr('stroke-dasharray', t === 1 ? null : '2 4'));
+  const a = anim('orbit');
+  const arc = d3.arc().startAngle(d => x(d.day)).endAngle(d => x(d.day) + x.bandwidth()).padRadius(r0).cornerRadius(3);
+  const days = g.append('g').attr('class', a ? 'anim-spin' : null).selectAll('g').data(rows).join('g');
+  days.append('path').attr('d', d => arc.innerRadius(r0).outerRadius(y(d.tt))(d)).attr('fill', 'none').attr('stroke', 'var(--color-fg-muted)').attr('stroke-opacity', .55).attr('stroke-dasharray', '3 3');
+  days.filter(d => d.khobar_actual != null).append('path').attr('d', d => arc.innerRadius(r0).outerRadius(y(d.khobar_actual))(d)).attr('fill', 'url(#orb-g0)');
+  days.filter(d => d.khobar_actual != null).append('path').attr('d', d => arc.innerRadius(y(d.khobar_actual) + 1).outerRadius(y(d.khobar_actual + d.dammam_actual))(d)).attr('fill', 'url(#orb-g1)')
+    .attr('filter', d => d.thu_fri ? 'url(#orb-glow)' : null);
+  // day labels
+  days.append('text').attr('transform', d => { const ang = x(d.day) + x.bandwidth() / 2, rr = R + 14; return `translate(${Math.sin(ang) * rr},${-Math.cos(ang) * rr})`; })
+    .attr('text-anchor', 'middle').attr('dy', '0.32em').attr('font-size', 11).attr('fill', d => d.thu_fri ? 'var(--color-fg)' : 'var(--color-fg-muted)').attr('font-weight', d => d.thu_fri ? 600 : 400).text(d => d.date.getUTCDate());
+  // slow period arc
+  const slow = rows.filter(r => r.slow_period);
+  if (slow.length) g.append('path').attr('d', d3.arc().innerRadius(r0 - 7).outerRadius(r0 - 4).startAngle(x(slow[0].day)).endAngle(x(slow[slow.length - 1].day) + x.bandwidth()).cornerRadius(2)()).attr('fill', 'var(--color-warn)').attr('opacity', .7);
+  // center
+  const done = rows.filter(r => r.khobar_actual != null);
+  const act = d3.sum(done, d => d.khobar_actual + d.dammam_actual), tgt = d3.sum(rows, d => d.tt);
+  const ring = d3.arc().innerRadius(r0 * 0.78).outerRadius(r0 * 0.86).cornerRadius(4);
+  g.append('path').attr('d', ring({ startAngle: 0, endAngle: 2 * Math.PI })).attr('fill', 'var(--cds-chart-grid)');
+  g.append('path').attr('d', ring({ startAngle: 0, endAngle: 2 * Math.PI * Math.min(1, act / tgt) })).attr('fill', C(0)).attr('filter', 'url(#orb-glow)');
+  g.append('text').attr('text-anchor', 'middle').attr('dy', '-0.15em').attr('font-size', Math.max(18, r0 * 0.34)).attr('font-family', 'var(--font-anthropic-serif)').attr('fill', 'var(--color-fg)').text(pct0(act / tgt));
+  g.append('text').attr('text-anchor', 'middle').attr('dy', '1.4em').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text('من تارقت الشهر');
+  // live dot on latest day
+  const last = done[done.length - 1];
+  if (last) { const ang = x(last.day) + x.bandwidth() / 2, rr = y(last.khobar_actual + last.dammam_actual) + 6; g.append('circle').attr('class', 'pulse').attr('cx', Math.sin(ang) * rr).attr('cy', -Math.cos(ang) * rr).attr('r', 4).attr('fill', C(1)).attr('filter', 'url(#orb-glow)'); }
+  // hover
+  const tip = makeTip(box);
+  const hit = d3.arc().innerRadius(r0).outerRadius(R + 20).startAngle(d => x(d.day) - x.step() * x.paddingInner() / 2).endAngle(d => x(d.day) + x.bandwidth() + x.step() * x.paddingInner() / 2);
+  g.append('g').selectAll('path').data(rows).join('path').attr('d', hit).attr('fill', 'transparent')
+    .on('mousemove', (ev, d) => {
+      days.attr('opacity', q => q === d ? 1 : 0.3);
+      const lines = [['تارقت الفرعين', money0(d.tt) + ' ر.س', 'var(--color-fg-muted)']];
+      if (d.khobar_actual != null) { lines.push(['الخبر', money0(d.khobar_actual), C(0)]); lines.push(['الدمام', money0(d.dammam_actual), C(1)]); lines.push(['الإنجاز', pct0((d.khobar_actual + d.dammam_actual) / d.tt), null, true]); }
+      else lines.push(['', 'ما فيه مبيعات بعد']);
+      showTip(tip, box, ev, dayLabel(d.day) + (d.thu_fri ? ' ✦' : '') + (d.slow_period ? ' · ركود' : ''), lines);
+    })
+    .on('mouseleave', () => { days.attr('opacity', 1); tip.style.display = 'none'; });
+}
+
+function drawAll() {
+  document.querySelectorAll('.px-sw[data-c]').forEach(e => e.style.background = C(Number(e.dataset.c)));
+  setTheme(); drawRange(); drawDaily(); drawWeekday(); drawOrbit(); drawTarget(); drawProd();
+  markFirst(); enhance();
+}
+dash.onData(drawAll);
+
+const linked = document.querySelector(`.px-tabs button[data-tab="${location.hash.slice(1)}"]`);
+if (linked) linked.click();
+</script>
+
+<p class="px-foot">بيانات تعليمية · أكتوبر ٢٠٢٦</p>
+</div>
+</body>
+</html>
