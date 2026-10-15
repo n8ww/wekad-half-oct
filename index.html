@@ -226,6 +226,9 @@ html,body{margin:0;background:#E9EDEB;color:var(--color-fg);font-family:var(--fo
   .px-legend { font-weight: 500; }
   .px-sw { border-radius: 1px; }
   .px-cal-head div { font-weight: 600; }
+  .px-var-kpi { border: 1px solid var(--color-border-line); border-radius: 4px; padding: var(--cds-pad-md) var(--cds-pad-lg); background: #FAFBFA; }
+  .px-var-kpi .px-lbl { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-weight: 600; }
+  .px-var-kpi .px-big { margin: .3rem 0 .2rem; }
 </style>
 
 <!-- icon sprites -->
@@ -369,6 +372,35 @@ html,body{margin:0;background:#E9EDEB;color:var(--color-fg);font-family:var(--fo
           <div class="px-row"><span>المتبقي للتارقت</span><b data-source="pace" data-field="remaining" data-where="branch=dammam">—</b></div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="px-card" style="margin-bottom: var(--cds-gap-md);">
+    <div class="px-card-h">
+      <div><h2 id="variance-h">نسبة الانحراف عن التارقت</h2><p>الانحراف = (المحقق − التارقت) ÷ التارقت. السالب يعني تحت التارقت، والموجب يعني فوقه.</p></div>
+    </div>
+    <div class="px-kpis" style="margin-bottom: var(--cds-gap-lg);">
+      <div class="px-var-kpi" data-b="khobar"><div class="px-lbl">انحراف الخبر</div><div class="px-big vnum" data-source="variance_total" data-field="variance_pct" data-where="branch=khobar">—</div><div class="px-meta">فرق <b data-source="variance_total" data-field="variance_amt" data-where="branch=khobar">—</b> ر.س</div></div>
+      <div class="px-var-kpi" data-b="dammam"><div class="px-lbl">انحراف الدمام</div><div class="px-big vnum" data-source="variance_total" data-field="variance_pct" data-where="branch=dammam">—</div><div class="px-meta">فرق <b data-source="variance_total" data-field="variance_amt" data-where="branch=dammam">—</b> ر.س</div></div>
+      <div class="px-var-kpi" data-b="total"><div class="px-lbl">انحراف الفرعين</div><div class="px-big vnum" data-source="variance_total" data-field="variance_pct" data-where="branch=total">—</div><div class="px-meta">فرق <b data-source="variance_total" data-field="variance_amt" data-where="branch=total">—</b> ر.س</div></div>
+    </div>
+    <div class="px-card-h" style="margin-bottom: var(--cds-gap-sm);">
+      <div><h2 style="font-size: var(--cds-font-size-body);">الانحراف اليومي لكل فرع</h2></div>
+      <div class="px-legend"><span><i class="px-sw" data-c="0"></i>الخبر</span><span><i class="px-sw" data-c="1"></i>الدمام</span></div>
+    </div>
+    <div class="px-chart px-h300 dash-skeleton" id="varchart" data-source="variance"></div>
+    <div class="px-tbl-wrap" style="margin-top: var(--cds-gap-lg); max-height: 360px;">
+      <table id="vtbl" data-source="variance" data-row-key="day">
+        <thead><tr>
+          <th data-field="day">اليوم</th>
+          <th data-field="target">تارقت الفرع</th>
+          <th data-field="khobar_actual">محقق الخبر</th>
+          <th data-field="khobar_var">انحراف الخبر</th>
+          <th data-field="dammam_actual">محقق الدمام</th>
+          <th data-field="dammam_var">انحراف الدمام</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
     </div>
   </div>
 
@@ -549,6 +581,30 @@ dash.calc('daily_vs_target', {
     return { day: t.day, weight: Number(t.weight), khobar_target: Number(t.khobar_target), dammam_target: Number(t.dammam_target),
       khobar_actual: s ? Number(s.khobar) : null, dammam_actual: s ? Number(s.dammam) : null, thu_fri: Number(t.thu_fri), slow_period: Number(t.slow_period) };
   })
+});
+
+dash.calc('variance', {
+  title: 'الانحراف اليومي عن التارقت',
+  description: 'لكل يوم فيه مبيعات: (المحقق − التارقت) ÷ التارقت لكل فرع.',
+  inputs: ['sales', 'targets'],
+  fn: (sales, targets) => sales.map(s => {
+    const t = targets.find(x => x.day.slice(0, 10) === s.day.slice(0, 10));
+    const kt = Number(t.khobar_target), dt = Number(t.dammam_target), k = Number(s.khobar), d = Number(s.dammam);
+    return { day: s.day, target: kt, khobar_actual: k, khobar_var: (k - kt) / kt, dammam_actual: d, dammam_var: (d - dt) / dt };
+  }).sort((a, b) => a.day < b.day ? -1 : 1)
+});
+
+dash.calc('variance_total', {
+  title: 'الانحراف الإجمالي عن التارقت',
+  description: 'مجموع المحقق مقابل مجموع تارقت نفس الأيام لكل فرع وللفرعين: الفرق ونسبة الانحراف.',
+  inputs: ['sales', 'targets'],
+  fn: (sales, targets) => {
+    const days = new Set(sales.map(s => s.day.slice(0, 10)));
+    const tt = targets.filter(t => days.has(t.day.slice(0, 10)));
+    const kt = tt.reduce((s, t) => s + Number(t.khobar_target), 0), dt = tt.reduce((s, t) => s + Number(t.dammam_target), 0);
+    const k = sales.reduce((s, r) => s + Number(r.khobar), 0), d = sales.reduce((s, r) => s + Number(r.dammam), 0);
+    return [['khobar', k, kt], ['dammam', d, dt], ['total', k + d, kt + dt]].map(([branch, a, t]) => ({ branch, actual: a, target: t, variance_amt: a - t, variance_pct: (a - t) / t }));
+  }
 });
 
 dash.calc('cumulative', {
@@ -1086,9 +1142,56 @@ function drawMonth() {
     .on('mouseleave', () => { g.attr('opacity', 1); tip.style.display = 'none'; });
 }
 
+function drawVariance() {
+  const sgn = v => '\u2066' + (v > 0 ? '+' : v < 0 ? '−' : '') + pct(Math.abs(v)) + '\u2069';
+  const sgnAmt = v => '\u2066' + (v > 0 ? '+' : v < 0 ? '−' : '') + money0(Math.abs(v)) + '\u2069';
+  const cls = v => v >= 0 ? 'ok' : v >= -0.15 ? 'warn' : 'bad';
+  const T = dash.data('variance_total');
+  document.querySelectorAll('[data-source="variance_total"][data-field]').forEach(e => {
+    if (T.status !== 'ok') { e.textContent = '—'; return; }
+    const [k, v] = e.dataset.where.split('='), r = T.data.find(x => x[k] === v);
+    if (!r) return;
+    e.textContent = e.dataset.field === 'variance_pct' ? sgn(r.variance_pct) : sgnAmt(r.variance_amt);
+    if (e.classList.contains('vnum')) e.className = 'px-big vnum ' + cls(r.variance_pct);
+  });
+
+  const V = dash.data('variance'), box = document.getElementById('varchart'), tb = document.querySelector('#vtbl tbody');
+  tb.innerHTML = '';
+  if (V.status !== 'ok') { box.innerHTML = ''; if (V.status === 'error') fail(box); return; }
+  const rows = V.data.map(d => ({ ...d, date: toDate(d.day) }));
+  rows.forEach(r => {
+    const tr = el('tr'); tr.dataset.key = r.day;
+    tr.appendChild(el('td', '', dayLabel(r.day)));
+    tr.appendChild(el('td', '', money0(r.target)));
+    tr.appendChild(el('td', '', money0(r.khobar_actual)));
+    tr.appendChild(el('td', cls(r.khobar_var), sgn(r.khobar_var)));
+    tr.appendChild(el('td', '', money0(r.dammam_actual)));
+    tr.appendChild(el('td', cls(r.dammam_var), sgn(r.dammam_var)));
+    tb.appendChild(tr);
+  });
+  if (!box.clientWidth) return;
+  const W0 = prepBox(box), H = 300, mb = 28, mt = 12;
+  const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W0} ${H}`);
+  const lo = Math.min(-0.1, d3.min(rows, r => Math.min(r.khobar_var, r.dammam_var))), hi = Math.max(0.1, d3.max(rows, r => Math.max(r.khobar_var, r.dammam_var)));
+  const y = d3.scaleLinear([lo * 1.1, hi * 1.1], [H - mb, mt]).nice();
+  const ml = measure(svg, '-60%') + 14;
+  const x = d3.scaleBand(rows.map(d => d.day), [ml, W0 - 4]).paddingInner(0.25).paddingOuter(0.05);
+  yAxis(svg, y, ml, W0 - 4, 6, d3.format('+.0%'));
+  svg.append('line').attr('x1', ml).attr('x2', W0 - 4).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--color-fg)').attr('stroke-width', 1.5);
+  svg.append('g').selectAll('text').data(rows).join('text').attr('x', d => x(d.day) + x.bandwidth() / 2).attr('y', H - 8).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(d => d.date.getUTCDate());
+  const inner = d3.scaleBand(['k', 'd'], [0, x.bandwidth()]).padding(0.1), a = anim('var');
+  const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', d => `translate(${x(d.day)},0)`);
+  [['khobar_var', 'k', 0], ['dammam_var', 'd', 1]].forEach(([f, key, ci]) => g.append('rect').attr('x', inner(key)).attr('width', inner.bandwidth())
+    .attr('y', d => y(Math.max(0, d[f]))).attr('height', d => Math.abs(y(d[f]) - y(0))).attr('fill', C(ci)).attr('class', a ? 'anim-f' : null));
+  const tip = makeTip(box);
+  svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', d => x(d.day) - x.step() * x.paddingInner() / 2).attr('width', x.step()).attr('y', 0).attr('height', H - mb).attr('fill', 'transparent')
+    .on('mousemove', (ev, d) => { g.attr('opacity', q => q === d ? 1 : 0.4); showTip(tip, box, ev, dayLabel(d.day), [['تارقت كل فرع', money0(d.target), 'var(--color-fg)'], ['الخبر', money0(d.khobar_actual) + ' · ' + sgn(d.khobar_var), C(0)], ['الدمام', money0(d.dammam_actual) + ' · ' + sgn(d.dammam_var), C(1)]]); })
+    .on('mouseleave', () => { g.attr('opacity', 1); tip.style.display = 'none'; });
+}
+
 function drawAll() {
   document.querySelectorAll('.px-sw[data-c]').forEach(e => e.style.background = C(Number(e.dataset.c)));
-  drawRange(); drawDaily(); drawWeekday(); drawMonth(); drawTarget(); drawProd();
+  drawRange(); drawDaily(); drawWeekday(); drawMonth(); drawTarget(); drawVariance(); drawProd();
 }
 dash.onData(drawAll);
 
