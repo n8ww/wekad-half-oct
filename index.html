@@ -15,11 +15,8 @@
 --cds-chart-grid:#ebe7e1;--cds-chart-axis:#c9c3bb;--cds-chart-reference:#9a948c;--cds-chart-muted:#b9b3ab;--cds-chart-status-critical:#d9480f;
 --cds-surface-popover:#ffffff;--cds-border:#e5e1db;--cds-shadow-popover:0 8px 24px rgba(0,0,0,.12);--cds-text-secondary:#6b6660;
 --s0:#5b5bd6;--s1:#d6409f;--s2:#0f9d8a;--s3:#e5871a;--s4:#3b82c4;--s5:#8a5cd1}
-@media (prefers-color-scheme:dark){:root{--color-bg:#121214;--color-panel:#1b1b1f;--color-fg:#f2f1ee;--color-fg-muted:#a29d96;--color-border-line:#2c2c32;--color-ok:#4ade9a;--color-warn:#f2b54a;--color-bad:#fb7a4b;
---cds-chart-grid:#2a2a30;--cds-chart-axis:#45454d;--cds-chart-reference:#7d7a75;--cds-chart-muted:#5d5b58;--cds-chart-status-critical:#ff6b3d;--cds-surface-popover:#222227;--cds-border:#34343a;--cds-shadow-popover:0 8px 24px rgba(0,0,0,.5);--cds-text-secondary:#a29d96;
---s0:#8b8bff;--s1:#ff6fc1;--s2:#3fd6bf;--s3:#ffab4a;--s4:#6ab4ff;--s5:#b48cff}}
-html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:var(--font-anthropic-sans)}
-#dash-root{padding:clamp(16px,3vw,40px)}
+html,body{margin:0;background:#E9EDEB;color:var(--color-fg);font-family:var(--font-anthropic-sans)}
+#dash-root{padding:clamp(12px,2.5vw,32px)}
 .dash-skeleton:empty,.px-chart.dash-skeleton{background:linear-gradient(90deg,var(--cds-chart-grid),transparent,var(--cds-chart-grid));background-size:200% 100%;border-radius:8px;animation:sk 1.4s linear infinite}
 @keyframes sk{to{background-position:-200% 0}}
 .px-foot{margin-top:2rem;text-align:center;font-size:.8rem;color:var(--color-fg-muted)}
@@ -190,60 +187,45 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
     .px .anim-x { transform-box: fill-box; transform-origin: left; animation: px-growx 600ms var(--cds-ease-out) both; }
     .px .anim-f { animation: px-fade 700ms var(--cds-ease-out) both; }
   }
-  /* ===== aurora theme ===== */
-  .px { position: relative; isolation: isolate; padding-top: var(--cds-gap-sm); }
-  .px-aurora { position: absolute; inset: -40px -20px auto -20px; height: 620px; z-index: -1; pointer-events: none; overflow: hidden; }
-  .px-aurora i { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .32; }
-  .px-aurora i:nth-child(1) { width: 46%; height: 70%; background: var(--a0); top: -10%; right: -5%; }
-  .px-aurora i:nth-child(2) { width: 40%; height: 60%; background: var(--a1); top: 5%; left: 0%; }
-  .px-aurora i:nth-child(3) { width: 34%; height: 50%; background: var(--a2); top: 35%; right: 35%; opacity: .22; }
-  .px-aurora::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, var(--color-bg) 100%); }
-  @media (prefers-reduced-motion: no-preference) {
-    @keyframes px-drift1 { 50% { transform: translate(-6%, 8%) scale(1.08); } }
-    @keyframes px-drift2 { 50% { transform: translate(8%, -4%) scale(.94); } }
-    @keyframes px-drift3 { 50% { transform: translate(-4%, -8%) scale(1.12); } }
-    .px-aurora i:nth-child(1) { animation: px-drift1 18s ease-in-out infinite; }
-    .px-aurora i:nth-child(2) { animation: px-drift2 22s ease-in-out infinite; }
-    .px-aurora i:nth-child(3) { animation: px-drift3 26s ease-in-out infinite; }
-    @keyframes px-draw { to { stroke-dashoffset: 0; } }
-    .px .anim-draw { animation: px-draw 1400ms var(--cds-ease-out) both; }
-    @keyframes px-spin-in { from { opacity: 0; transform: rotate(-30deg) scale(.85); } to { opacity: 1; transform: none; } }
-    .px .anim-spin { transform-origin: center; transform-box: fill-box; animation: px-spin-in 1100ms var(--cds-ease-out) both; }
-    @keyframes px-pulse { 0%, 100% { opacity: .55; r: 3; } 50% { opacity: 1; r: 5; } }
-    .px .pulse { animation: px-pulse 2.2s ease-in-out infinite; }
-    .px-card { transition: transform var(--cds-dur-slow) var(--cds-ease-out), box-shadow var(--cds-dur-slow); }
-    .px-card:hover { transform: translateY(-2px); }
+  /* ===== business theme (light, green) ===== */
+  .px {
+    --g900: #0B3D2E; --g700: #0E5A43; --g500: #2E8B62; --g300: #8CC2A5; --g100: #E6F1EB;
+    --color-bg: #F3F5F4; --color-panel: #FFFFFF; --color-fg: #13201B; --color-fg-muted: #5B6863; --color-border-line: #D9DFDC;
+    --color-ok: #0E7A4F; --color-warn: #A86A12; --color-bad: #B42318;
+    --cds-chart-grid: #E9EDEB; --cds-chart-axis: #8E9A95; --cds-chart-reference: #13201B; --cds-chart-muted: #B9C3BE; --cds-chart-status-critical: #B42318;
+    --cds-surface-popover: #FFFFFF; --cds-border: #C9D1CD; --cds-shadow-popover: 0 4px 14px rgba(19, 32, 27, .14); --cds-text-secondary: #5B6863;
+    --font-anthropic-serif: var(--font-anthropic-sans);
+    background: var(--color-bg); color: var(--color-fg); color-scheme: light;
+    padding: 0 0 24px; border: 1px solid var(--color-border-line); border-radius: 4px; overflow: hidden;
   }
-  .px-hero { padding: var(--cds-pad-lg) 0 var(--cds-gap-lg); }
-  .px-hero h1 { background: linear-gradient(100deg, var(--color-fg) 10%, var(--a0) 55%, var(--a1) 95%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .px-dot { background: var(--a0); box-shadow: 0 0 0 4px color-mix(in srgb, var(--a0) 25%, transparent), 0 0 14px var(--a0); }
-  .px-card, .px-insight, .px-tabs, .px-chip {
-    background: color-mix(in srgb, var(--color-panel) 74%, transparent);
-    -webkit-backdrop-filter: blur(16px) saturate(140%); backdrop-filter: blur(16px) saturate(140%);
-    border-color: color-mix(in srgb, var(--a0) 16%, var(--color-border-line));
-  }
-  .px-card { border-radius: 18px; box-shadow: 0 1px 0 color-mix(in srgb, var(--color-fg) 4%, transparent), 0 12px 32px -18px color-mix(in srgb, var(--a0) 45%, transparent); }
-  .px-card:hover { box-shadow: 0 1px 0 color-mix(in srgb, var(--color-fg) 4%, transparent), 0 18px 40px -16px color-mix(in srgb, var(--a0) 60%, transparent); }
-  .px-card::after { content: ""; position: absolute; inset: 0 0 auto 0; height: 1px; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--a0) 60%, transparent), color-mix(in srgb, var(--a1) 60%, transparent), transparent); pointer-events: none; }
-  .px-tabs button[aria-selected="true"] { background: linear-gradient(110deg, var(--a0), var(--a1)); color: var(--color-bg); box-shadow: 0 6px 18px -8px var(--a0); }
-  .px-ico { border: 0; background: linear-gradient(135deg, color-mix(in srgb, var(--a0) 22%, transparent), color-mix(in srgb, var(--a1) 22%, transparent)); color: var(--a0); }
-  .px-kpi .px-big { font-size: calc(var(--cds-font-size-title) * 1.15); }
-  .px-insight { border-inline-start-width: 0; position: relative; overflow: hidden; }
-  .px-insight::before { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; width: 4px; background: linear-gradient(to bottom, var(--a0), var(--a1)); }
-  .px-insight svg { color: var(--a0); }
-  .px-tbl-wrap { border-color: color-mix(in srgb, var(--a0) 14%, var(--color-border-line)); }
-  .px th { background: color-mix(in srgb, var(--color-panel) 92%, var(--a0)); }
-  .px-day { transition: transform var(--cds-dur-slow); }
-  .px-day:hover { transform: scale(1.04); }
-
-  /* orbit chart */
-  .px-orbit-wrap { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--cds-gap-lg); align-items: center; }
-  @container (max-width: 760px) { .px-orbit-wrap { grid-template-columns: 1fr; } }
-  .px-orbit { min-height: 420px; }
-  .px-orbit-side h3 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-sm); line-height: 1.3; }
-  .px-orbit-side p { color: var(--color-fg-muted); font-size: var(--cds-font-size-body); line-height: 1.8; margin: 0 0 var(--cds-gap-md); }
-  .px-orbit-side .px-legend { flex-direction: column; gap: .55rem; font-size: var(--cds-font-size-body); }
-  .px-sw.ring { background: none !important; border: 2px dashed var(--color-fg-muted); height: .7rem; width: .7rem; border-radius: 50%; }
+  .px-hero { background: var(--g900); color: #fff; padding: 22px 24px; margin: 0 0 0; align-items: center; }
+  .px-hero h1 { color: #fff; font-weight: 700; font-size: var(--cds-font-size-title); letter-spacing: -.01em; }
+  .px-eyebrow { color: #A9C9B9; }
+  .px-dot { background: #4FD39A; }
+  .px-chip { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.22); color: #E3EFE9; border-radius: 3px; }
+  .px > .px-tabs, .px > section { margin-inline: 24px; }
+  .px-tabs { display: flex; gap: 0; padding: 0; background: none; border: 0; border-bottom: 1px solid var(--color-border-line); border-radius: 0; margin: 0 24px 20px; }
+  .px-tabs button { border-radius: 0; padding: .8rem 1.1rem; border-bottom: 3px solid transparent; margin-bottom: -1px; font-weight: 600; }
+  .px-tabs button[aria-selected="true"] { background: none; color: var(--g900); border-bottom-color: var(--g700); }
+  .px-card { border-radius: 4px; box-shadow: none; border-color: var(--color-border-line); }
+  .px-card::after { display: none; }
+  .px-insight { border-radius: 4px; border: 1px solid var(--color-border-line); border-inline-start: 4px solid var(--g700); background: var(--color-panel); font-weight: 500; }
+  .px-insight svg { color: var(--g700); }
+  .px-ico { border: 0; border-radius: 4px; background: var(--g100); color: var(--g700); }
+  .px-kpi-top { font-weight: 600; text-transform: none; }
+  .px-big { font-family: var(--font-anthropic-sans); font-weight: 700; letter-spacing: -.015em; }
+  .px-kpi { border-top: 3px solid var(--g700); }
+  .px-pill { border-radius: 3px; }
+  .px .tag { border-radius: 3px; }
+  .px-search input { border-radius: 4px; }
+  .px-tbl-wrap { border-radius: 4px; }
+  .px th { background: #F6F8F7; color: var(--color-fg); text-transform: none; }
+  .px tbody tr:hover td { background: var(--g100); }
+  .px-day { border-radius: 3px; }
+  .px-card-h h2 { font-weight: 700; }
+  .px-legend { font-weight: 500; }
+  .px-sw { border-radius: 1px; }
+  .px-cal-head div { font-weight: 600; }
 </style>
 
 <!-- icon sprites -->
@@ -266,7 +248,6 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
   </defs>
 </svg>
 
-<div class="px-aurora" aria-hidden="true"><i></i><i></i><i></i></div>
 <header class="px-hero">
   <div>
     <div class="px-eyebrow"><span class="px-dot"></span>تقرير أداء الفرعين · أكتوبر ٢٠٢٦</div>
@@ -316,19 +297,11 @@ html,body{margin:0;background:var(--color-bg);color:var(--color-fg);font-family:
   </div>
 
   <div class="px-card" style="margin-bottom: var(--cds-gap-md);">
-    <div class="px-orbit-wrap">
-      <div class="px-chart px-orbit dash-skeleton" id="orbit" data-source="daily_vs_target"></div>
-      <div class="px-orbit-side">
-        <div class="px-eyebrow" style="margin-bottom:.4rem"><span class="px-dot"></span>نبض الشهر</div>
-        <h3 id="orbit-h">كل يوم من أكتوبر في دائرة وحدة</h3>
-        <p>كل شعاع = يوم. الطول = مبيعات الفرعين فوق بعض، والإطار المتقطع = تارقت اليوم. الأيام الجاية تظهر كإطار بس لين تنضاف مبيعاتها. الأيام المضيئة = خميس وجمعة.</p>
-        <div class="px-legend">
-          <span><i class="px-sw" data-c="0"></i>الخبر</span>
-          <span><i class="px-sw" data-c="1"></i>الدمام</span>
-          <span><i class="px-sw ring"></i>تارقت اليوم (الفرعين)</span>
-        </div>
-      </div>
+    <div class="px-card-h">
+      <div><h2 id="month-h">الشهر كامل: المبيعات اليومية مقابل التارقت</h2><p>العمود = مبيعات الفرعين فوق بعض. الخط الأسود فوق كل عمود = تارقت اليوم للفرعين. الأيام الجاية تظهر بالتارقت بس. المنطقة الرمادية = فترة الركود ١٥–٢٥.</p></div>
+      <div class="px-legend"><span><i class="px-sw" data-c="0"></i>الخبر</span><span><i class="px-sw" data-c="1"></i>الدمام</span><span><i class="px-sw" style="height:3px;width:1rem;background:var(--color-fg)"></i>التارقت</span></div>
     </div>
+    <div class="px-chart px-h340 dash-skeleton" id="month" data-source="daily_vs_target"></div>
   </div>
 
   <div class="px-grid">
@@ -640,7 +613,8 @@ const wdName = new Intl.DateTimeFormat('ar', { weekday: 'long', timeZone: 'UTC' 
 const WD = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 const toDate = s => new Date(String(s).slice(0, 10) + 'T00:00:00Z');
 const dayLabel = s => { const d = toDate(s); return wdName.format(d) + ' ' + d.getUTCDate() + ' أكتوبر'; };
-const C = i => dash.colors[i];
+const PAL = ['#0E5A43', '#7DB89A', '#C08A1E', '#3E5C76', '#A9B8B1', '#6B4F3A'];
+const C = i => PAL[i % PAL.length];
 const unskel = sel => document.querySelectorAll(sel).forEach(e => e.classList.remove('dash-skeleton'));
 const fail = el => { el.classList.remove('dash-skeleton'); el.innerHTML = ''; const f = document.createElement('div'); f.className = 'px-fail'; f.textContent = 'Failed to load'; el.appendChild(f); };
 const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
@@ -743,7 +717,7 @@ function drawDaily() {
     const g = svg.append('g').attr('transform', `translate(${w / 2},${R})`);
     const data = [{ v: S[0].khobar, c: C(0) }, { v: S[0].dammam, c: C(1) }];
     const arcs = d3.pie().value(d => d.v).sort(null).padAngle(0.02)(data);
-    g.selectAll('path').data(arcs).join('path').attr('d', d3.arc().innerRadius(R * 0.68).outerRadius(R).cornerRadius(6)).attr('fill', d => d.data.c).attr('class', anim('donut') ? 'anim-f' : null);
+    g.selectAll('path').data(arcs).join('path').attr('d', d3.arc().innerRadius(R * 0.68).outerRadius(R).cornerRadius(0)).attr('fill', d => d.data.c).attr('class', anim('donut') ? 'anim-f' : null);
     g.append('text').attr('text-anchor', 'middle').attr('dy', '-0.1em').attr('font-size', 22).attr('font-family', 'var(--font-anthropic-serif)').attr('fill', 'var(--color-fg)').text(compact(S[0].total));
     g.append('text').attr('text-anchor', 'middle').attr('dy', '1.5em').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text('ر.س إجمالي');
   } else if (dash.data('summary').status === 'error') fail(dbox);
@@ -781,7 +755,7 @@ function drawDaily() {
     const bw = Math.min(16, inner.bandwidth()), off = (inner.bandwidth() - bw) / 2;
     const a = anim('bars');
     const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', d => `translate(${x(d.day)},0)`);
-    [['k', 0], ['m', 1]].forEach(([key, ci]) => g.append('rect').attr('x', inner(key) + off).attr('width', bw).attr('y', d => y(d[key])).attr('height', d => y(0) - y(d[key])).attr('rx', Math.min(4, bw / 2)).attr('fill', C(ci)).attr('class', a ? 'anim-y' : null));
+    [['k', 0], ['m', 1]].forEach(([key, ci]) => g.append('rect').attr('x', inner(key) + off).attr('width', bw).attr('y', d => y(d[key])).attr('height', d => y(0) - y(d[key])).attr('rx', 1).attr('fill', C(ci)).attr('class', a ? 'anim-y' : null));
     const tip = makeTip(box);
     svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', d => x(d.day) - x.step() * x.paddingInner() / 2).attr('width', x.step()).attr('y', 0).attr('height', H - mb).attr('fill', 'transparent')
       .on('mousemove', (ev, d) => { g.attr('opacity', r => r === d ? 1 : 0.4); showTip(tip, box, ev, dayLabel(d.day), [['الخبر', money(d.k), C(0)], ['الدمام', money(d.m), C(1)], ['الإجمالي', money(d.t) + ' ر.س', null, true]]); })
@@ -812,7 +786,7 @@ function drawWeekday() {
   const y = d3.scaleLinear([0, d3.max(rows, d => d.avg_total) * 1.12], [H - mb, mt]);
   const bw = Math.min(32, x.bandwidth()), a = anim('wd');
   const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', d => `translate(${x(d.weekday) + (x.bandwidth() - bw) / 2},0)`);
-  g.append('rect').attr('width', bw).attr('y', d => y(d.avg_total)).attr('height', d => y(0) - y(d.avg_total)).attr('rx', 6)
+  g.append('rect').attr('width', bw).attr('y', d => y(d.avg_total)).attr('height', d => y(0) - y(d.avg_total)).attr('rx', 1)
     .attr('fill', d => (d.weekday === 4 || d.weekday === 5) ? C(0) : 'var(--cds-chart-muted)').attr('class', a ? 'anim-y' : null);
   g.append('text').attr('x', bw / 2).attr('y', d => y(d.avg_total) - 6).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(d => compact(d.avg_total));
   g.append('text').attr('x', bw / 2).attr('y', H - 8).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(d => short[d.weekday]);
@@ -839,7 +813,7 @@ function drawTarget() {
       const w = prepBox(gbox), size = Math.min(w, 170), R = size / 2, color = r.branch === 'khobar' ? C(0) : C(1);
       const svg = d3.select(gbox).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${w} ${size}`);
       const g = svg.append('g').attr('transform', `translate(${w / 2},${R})`);
-      const arc = d3.arc().innerRadius(R * 0.78).outerRadius(R).cornerRadius(R);
+      const arc = d3.arc().innerRadius(R * 0.8).outerRadius(R).cornerRadius(0);
       g.append('path').attr('d', arc({ startAngle: 0, endAngle: 2 * Math.PI })).attr('fill', 'var(--cds-chart-grid)');
       g.append('path').attr('d', arc({ startAngle: 0, endAngle: 2 * Math.PI * Math.min(1, r.projected_pct) })).attr('fill', color).attr('opacity', 0.3);
       g.append('path').attr('d', arc({ startAngle: 0, endAngle: 2 * Math.PI * Math.min(1, r.pct_to_date) })).attr('fill', color).attr('class', anim('g' + r.branch) ? 'anim-f' : null);
@@ -968,8 +942,8 @@ function hbars(box, data, val, fmt, key) {
   const a = anim(key);
   const g = svg.append('g').selectAll('g').data(data).join('g').attr('transform', p => `translate(0,${y(p.product)})`);
   g.append('text').attr('x', ml - 8).attr('y', y.bandwidth() / 2).attr('dy', '0.32em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg)').text(p => short(p.product));
-  g.append('rect').attr('x', ml).attr('height', y.bandwidth()).attr('width', W0 - valW - ml).attr('rx', 5).attr('fill', 'var(--cds-chart-grid)').attr('opacity', 0.5);
-  g.append('rect').attr('x', ml).attr('height', y.bandwidth()).attr('width', p => Math.max(2, x(val(p)) - ml)).attr('rx', 5).attr('fill', p => catColor(p.category)).attr('class', a ? 'anim-x' : null);
+  g.append('rect').attr('x', ml).attr('height', y.bandwidth()).attr('width', W0 - valW - ml).attr('rx', 1).attr('fill', 'var(--cds-chart-grid)').attr('opacity', 0.5);
+  g.append('rect').attr('x', ml).attr('height', y.bandwidth()).attr('width', p => Math.max(2, x(val(p)) - ml)).attr('rx', 1).attr('fill', p => catColor(p.category)).attr('class', a ? 'anim-x' : null);
   g.append('text').attr('x', p => x(val(p)) + 6).attr('y', y.bandwidth() / 2).attr('dy', '0.32em').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(p => fmt(val(p)));
 }
 
@@ -999,7 +973,7 @@ function drawProd() {
       const svg = d3.select(cd).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${w} ${size}`);
       const g = svg.append('g').attr('transform', `translate(${w / 2},${R})`);
       const arcs = d3.pie().value(d => d.sales).sort(null).padAngle(0.015)(BC.data);
-      g.selectAll('path').data(arcs).join('path').attr('d', d3.arc().innerRadius(R * 0.68).outerRadius(R).cornerRadius(4)).attr('fill', d => catColor(d.data.category)).attr('class', anim('catd') ? 'anim-f' : null);
+      g.selectAll('path').data(arcs).join('path').attr('d', d3.arc().innerRadius(R * 0.68).outerRadius(R).cornerRadius(0)).attr('fill', d => catColor(d.data.category)).attr('class', anim('catd') ? 'anim-f' : null);
       g.append('text').attr('text-anchor', 'middle').attr('dy', '-0.1em').attr('font-size', 22).attr('font-family', 'var(--font-anthropic-serif)').attr('fill', 'var(--color-fg)').text(pct0(BC.data[0].share));
       g.append('text').attr('text-anchor', 'middle').attr('dy', '1.5em').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(BC.data[0].category);
     }
@@ -1023,7 +997,7 @@ function drawProd() {
     if (n80 >= 0) {
       const xx = x(rows[n80].rank) + x.bandwidth() / 2;
       svg.append('line').attr('x1', xx).attr('x2', xx).attr('y1', y2(0.8)).attr('y2', H - mb).attr('stroke', 'var(--cds-chart-reference)').attr('stroke-dasharray', '4 4');
-      svg.append('text').attr('x', xx + 6).attr('y', y2(0.8) - 8).attr('font-size', 12).attr('fill', 'var(--color-fg)').text(`${n80 + 1} منتج = ٨٠٪`);
+      svg.append('text').attr('x', xx + 6).attr('y', y2(0.8) - 14).attr('stroke', 'var(--color-panel)').attr('stroke-width', 4).attr('paint-order', 'stroke').attr('direction', 'rtl').attr('text-anchor', 'end').attr('font-size', 12).attr('font-weight', 700).attr('fill', 'var(--color-fg)').text(`${arN(n80 + 1)} منتج = ٨٠٪ من المبيعات`);
     }
     [1, 10, 20, 30, 40, 50, 60, rows.length].filter((v, i, a) => v <= rows.length && a.indexOf(v) === i).forEach(r => svg.append('text').attr('x', x(r) + x.bandwidth() / 2).attr('y', H - 8).attr('text-anchor', 'middle').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text(r));
     svg.append('line').attr('x1', ml).attr('x2', W0 - mr).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--cds-chart-axis)');
@@ -1067,118 +1041,54 @@ function drawProd() {
   drawProdTable();
 }
 
-/* ===== theme helpers ===== */
-function setTheme() {
-  const root = document.querySelector('.px');
-  ['--a0', '--a1', '--a2', '--a3'].forEach((v, i) => root.style.setProperty(v, C(i)));
-}
-let gid = 0;
-function enhance() {
-  const cols = dash.colors.slice(0, 6);
-  document.querySelectorAll('.px .px-chart svg').forEach(svg => {
-    if (svg.dataset.fx) return; svg.dataset.fx = '1';
-    const s = d3.select(svg); const defs = s.insert('defs', ':first-child'); const id = 'fx' + (gid++);
-    const f = defs.append('filter').attr('id', id + 'glow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
-    f.append('feGaussianBlur').attr('stdDeviation', 3.2).attr('result', 'b');
-    const m = f.append('feMerge'); m.append('feMergeNode').attr('in', 'b'); m.append('feMergeNode').attr('in', 'SourceGraphic');
-    const inTree = svg.closest('#tree');
-    cols.forEach((c, i) => {
-      const v = defs.append('linearGradient').attr('id', `${id}v${i}`).attr('x1', 0).attr('x2', 0).attr('y1', 0).attr('y2', 1);
-      v.append('stop').attr('offset', 0).attr('style', `stop-color:${c};stop-opacity:1`);
-      v.append('stop').attr('offset', 1).attr('style', `stop-color:${c};stop-opacity:${inTree ? .78 : .5}`);
-      const h = defs.append('linearGradient').attr('id', `${id}h${i}`).attr('x1', 0).attr('x2', 1).attr('y1', 0).attr('y2', 0);
-      h.append('stop').attr('offset', 0).attr('style', `stop-color:${c};stop-opacity:.55`);
-      h.append('stop').attr('offset', 1).attr('style', `stop-color:${c};stop-opacity:1`);
-    });
-    s.selectAll('rect').each(function () {
-      const r = d3.select(this), fill = r.attr('fill'), i = cols.indexOf(fill);
-      if (i < 0) return;
-      const wide = (+r.attr('width') || 0) > (+r.attr('height') || 0) * 1.5 && !inTree;
-      r.attr('fill', `url(#${id}${wide ? 'h' : 'v'}${i})`);
-    });
-    s.selectAll('path').each(function () {
-      const p = d3.select(this);
-      if (p.attr('fill') === 'none' && cols.includes(p.attr('stroke'))) {
-        p.attr('filter', `url(#${id}glow)`);
-        if (!p.attr('stroke-dasharray') && !p.node().dataset.drawn) {
-          const L = p.node().getTotalLength(); p.node().dataset.drawn = 1;
-          if (svg.dataset.first === '1') p.attr('stroke-dasharray', L).attr('stroke-dashoffset', L).classed('anim-draw', true);
-        }
-      }
-      const fi = cols.indexOf(p.attr('fill'));
-      if (fi >= 0 && svg.closest('.px-gauge, .px-donut')) p.attr('filter', `url(#${id}glow)`);
-    });
-    s.selectAll('circle').each(function () { const c = d3.select(this); if (cols.includes(c.attr('fill')) && +c.attr('r') <= 5) c.attr('filter', `url(#${id}glow)`); });
-  });
-}
-// mark svgs drawn on a first draw so lines animate once
-const firstSvg = new Set();
-const markFirst = () => document.querySelectorAll('.px .px-chart').forEach(b => { const s = b.querySelector('svg'); if (s && !firstSvg.has(b.id || b)) { firstSvg.add(b.id || b); s.dataset.first = '1'; } });
-
-function drawOrbit() {
-  const D = dash.data('daily_vs_target'), box = document.getElementById('orbit');
+function drawMonth() {
+  const D = dash.data('daily_vs_target'), box = document.getElementById('month');
   if (D.status !== 'ok') { box.innerHTML = ''; if (D.status === 'error') fail(box); return; }
   if (!box.clientWidth) return;
   const rows = D.data.map(d => ({ ...d, date: toDate(d.day), tt: d.khobar_target + d.dammam_target })).sort((a, b) => a.date - b.date);
-  const W0 = prepBox(box), H = Math.min(W0, 460), R = H / 2 - 30, r0 = R * 0.34;
+  const W0 = prepBox(box), H = 340, mb = 30, mt = 18;
   const svg = d3.select(box).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W0} ${H}`);
-  const defs = svg.append('defs');
-  const rg = defs.append('radialGradient').attr('id', 'orb-core');
-  rg.append('stop').attr('offset', 0).attr('style', `stop-color:${C(0)};stop-opacity:.28`);
-  rg.append('stop').attr('offset', 1).attr('style', `stop-color:${C(1)};stop-opacity:0`);
-  const glow = defs.append('filter').attr('id', 'orb-glow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
-  glow.append('feGaussianBlur').attr('stdDeviation', 4).attr('result', 'b');
-  const gm = glow.append('feMerge'); gm.append('feMergeNode').attr('in', 'b'); gm.append('feMergeNode').attr('in', 'SourceGraphic');
-  [0, 1].forEach(i => { const g = defs.append('radialGradient').attr('id', 'orb-g' + i).attr('cx', W0 / 2).attr('cy', H / 2).attr('r', R).attr('gradientUnits', 'userSpaceOnUse');
-    g.append('stop').attr('offset', r0 / R).attr('style', `stop-color:${C(i)};stop-opacity:.55`); g.append('stop').attr('offset', 1).attr('style', `stop-color:${C(i)};stop-opacity:1`); });
-  const g = svg.append('g').attr('transform', `translate(${W0 / 2},${H / 2})`);
-  const maxV = d3.max(rows, d => Math.max(d.tt, (d.khobar_actual || 0) + (d.dammam_actual || 0)));
-  const y = d3.scaleRadial([0, maxV], [r0, R]);
-  const x = d3.scaleBand(rows.map(d => d.day), [0, 2 * Math.PI]).padding(0.14);
-  g.append('circle').attr('r', R + 8).attr('fill', 'url(#orb-core)');
-  [0.25, 0.5, 0.75, 1].forEach(t => g.append('circle').attr('r', y(maxV * t)).attr('fill', 'none').attr('stroke', 'var(--cds-chart-grid)').attr('stroke-dasharray', t === 1 ? null : '2 4'));
-  const a = anim('orbit');
-  const arc = d3.arc().startAngle(d => x(d.day)).endAngle(d => x(d.day) + x.bandwidth()).padRadius(r0).cornerRadius(3);
-  const days = g.append('g').attr('class', a ? 'anim-spin' : null).selectAll('g').data(rows).join('g');
-  days.append('path').attr('d', d => arc.innerRadius(r0).outerRadius(y(d.tt))(d)).attr('fill', 'none').attr('stroke', 'var(--color-fg-muted)').attr('stroke-opacity', .55).attr('stroke-dasharray', '3 3');
-  days.filter(d => d.khobar_actual != null).append('path').attr('d', d => arc.innerRadius(r0).outerRadius(y(d.khobar_actual))(d)).attr('fill', 'url(#orb-g0)');
-  days.filter(d => d.khobar_actual != null).append('path').attr('d', d => arc.innerRadius(y(d.khobar_actual) + 1).outerRadius(y(d.khobar_actual + d.dammam_actual))(d)).attr('fill', 'url(#orb-g1)')
-    .attr('filter', d => d.thu_fri ? 'url(#orb-glow)' : null);
-  // day labels
-  days.append('text').attr('transform', d => { const ang = x(d.day) + x.bandwidth() / 2, rr = R + 14; return `translate(${Math.sin(ang) * rr},${-Math.cos(ang) * rr})`; })
-    .attr('text-anchor', 'middle').attr('dy', '0.32em').attr('font-size', 11).attr('fill', d => d.thu_fri ? 'var(--color-fg)' : 'var(--color-fg-muted)').attr('font-weight', d => d.thu_fri ? 600 : 400).text(d => d.date.getUTCDate());
-  // slow period arc
+  const y = d3.scaleLinear([0, d3.max(rows, d => Math.max(d.tt, (d.khobar_actual || 0) + (d.dammam_actual || 0))) * 1.08], [H - mb, mt]).nice();
+  const ml = measure(svg, d3.format('~s')(y.domain()[1])) + 14;
+  const x = d3.scaleBand(rows.map(d => d.day), [ml, W0 - 4]).paddingInner(0.22).paddingOuter(0.05);
   const slow = rows.filter(r => r.slow_period);
-  if (slow.length) g.append('path').attr('d', d3.arc().innerRadius(r0 - 7).outerRadius(r0 - 4).startAngle(x(slow[0].day)).endAngle(x(slow[slow.length - 1].day) + x.bandwidth()).cornerRadius(2)()).attr('fill', 'var(--color-warn)').attr('opacity', .7);
-  // center
-  const done = rows.filter(r => r.khobar_actual != null);
-  const act = d3.sum(done, d => d.khobar_actual + d.dammam_actual), tgt = d3.sum(rows, d => d.tt);
-  const ring = d3.arc().innerRadius(r0 * 0.78).outerRadius(r0 * 0.86).cornerRadius(4);
-  g.append('path').attr('d', ring({ startAngle: 0, endAngle: 2 * Math.PI })).attr('fill', 'var(--cds-chart-grid)');
-  g.append('path').attr('d', ring({ startAngle: 0, endAngle: 2 * Math.PI * Math.min(1, act / tgt) })).attr('fill', C(0)).attr('filter', 'url(#orb-glow)');
-  g.append('text').attr('text-anchor', 'middle').attr('dy', '-0.15em').attr('font-size', Math.max(18, r0 * 0.34)).attr('font-family', 'var(--font-anthropic-serif)').attr('fill', 'var(--color-fg)').text(pct0(act / tgt));
-  g.append('text').attr('text-anchor', 'middle').attr('dy', '1.4em').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text('من تارقت الشهر');
-  // live dot on latest day
-  const last = done[done.length - 1];
-  if (last) { const ang = x(last.day) + x.bandwidth() / 2, rr = y(last.khobar_actual + last.dammam_actual) + 6; g.append('circle').attr('class', 'pulse').attr('cx', Math.sin(ang) * rr).attr('cy', -Math.cos(ang) * rr).attr('r', 4).attr('fill', C(1)).attr('filter', 'url(#orb-glow)'); }
-  // hover
+  if (slow.length) {
+    const x0 = x(slow[0].day) - x.step() * x.paddingInner() / 2, x1 = x(slow[slow.length - 1].day) + x.bandwidth() + x.step() * x.paddingInner() / 2;
+    svg.append('rect').attr('x', x0).attr('width', x1 - x0).attr('y', mt - 14).attr('height', H - mb - mt + 14).attr('fill', '#EEF1EF');
+    svg.append('text').attr('x', (x0 + x1) / 2).attr('y', mt - 3).attr('text-anchor', 'middle').attr('font-size', 11).attr('font-weight', 600).attr('fill', 'var(--color-fg-muted)').text('فترة الركود');
+  }
+  yAxis(svg, y, ml, W0 - 4);
+  const step = x.bandwidth() < 14 ? 2 : 1;
+  svg.append('g').selectAll('text').data(rows.filter((d, i) => i % step === 0)).join('text').attr('x', d => x(d.day) + x.bandwidth() / 2).attr('y', H - 10).attr('text-anchor', 'middle').attr('font-size', 11)
+    .attr('font-weight', d => d.thu_fri ? 700 : 400).attr('fill', d => d.thu_fri ? 'var(--color-fg)' : 'var(--color-fg-muted)').text(d => d.date.getUTCDate());
+  svg.append('line').attr('x1', ml).attr('x2', W0 - 4).attr('y1', y(0)).attr('y2', y(0)).attr('stroke', 'var(--cds-chart-axis)');
+  const a = anim('month');
+  const g = svg.append('g').selectAll('g').data(rows).join('g').attr('transform', d => `translate(${x(d.day)},0)`);
+  const bw = x.bandwidth();
+  const has = g.filter(d => d.khobar_actual != null);
+  has.append('rect').attr('width', bw).attr('y', d => y(d.khobar_actual)).attr('height', d => y(0) - y(d.khobar_actual)).attr('fill', C(0)).attr('class', a ? 'anim-y' : null);
+  has.append('rect').attr('width', bw).attr('y', d => y(d.khobar_actual + d.dammam_actual)).attr('height', d => y(d.khobar_actual) - y(d.khobar_actual + d.dammam_actual)).attr('fill', C(1)).attr('class', a ? 'anim-y' : null);
+  g.filter(d => d.khobar_actual == null).append('rect').attr('width', bw).attr('y', d => y(d.tt)).attr('height', d => y(0) - y(d.tt)).attr('fill', 'none').attr('stroke', 'var(--cds-chart-muted)').attr('stroke-dasharray', '3 2');
+  g.append('line').attr('x1', -2).attr('x2', bw + 2).attr('y1', d => y(d.tt)).attr('y2', d => y(d.tt)).attr('stroke', 'var(--color-fg)').attr('stroke-width', 2.5);
+  // achievement label on actual days
+  if (bw >= 18) has.append('text').attr('x', bw / 2).attr('y', d => Math.min(y(d.tt), y(d.khobar_actual + d.dammam_actual)) - 6).attr('text-anchor', 'middle').attr('font-size', 10).attr('font-weight', 700)
+    .attr('fill', d => { const p = (d.khobar_actual + d.dammam_actual) / d.tt; return p >= 1 ? 'var(--color-ok)' : p >= 0.85 ? 'var(--color-warn)' : 'var(--color-bad)'; })
+    .text(d => pct0((d.khobar_actual + d.dammam_actual) / d.tt));
   const tip = makeTip(box);
-  const hit = d3.arc().innerRadius(r0).outerRadius(R + 20).startAngle(d => x(d.day) - x.step() * x.paddingInner() / 2).endAngle(d => x(d.day) + x.bandwidth() + x.step() * x.paddingInner() / 2);
-  g.append('g').selectAll('path').data(rows).join('path').attr('d', hit).attr('fill', 'transparent')
+  svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', d => x(d.day) - x.step() * x.paddingInner() / 2).attr('width', x.step()).attr('y', 0).attr('height', H - mb).attr('fill', 'transparent')
     .on('mousemove', (ev, d) => {
-      days.attr('opacity', q => q === d ? 1 : 0.3);
-      const lines = [['تارقت الفرعين', money0(d.tt) + ' ر.س', 'var(--color-fg-muted)']];
+      g.attr('opacity', q => q === d ? 1 : 0.4);
+      const lines = [['تارقت الفرعين', money0(d.tt) + ' ر.س', 'var(--color-fg)']];
       if (d.khobar_actual != null) { lines.push(['الخبر', money0(d.khobar_actual), C(0)]); lines.push(['الدمام', money0(d.dammam_actual), C(1)]); lines.push(['الإنجاز', pct0((d.khobar_actual + d.dammam_actual) / d.tt), null, true]); }
-      else lines.push(['', 'ما فيه مبيعات بعد']);
-      showTip(tip, box, ev, dayLabel(d.day) + (d.thu_fri ? ' ✦' : '') + (d.slow_period ? ' · ركود' : ''), lines);
+      else lines.push(['الفعلي', 'ما فيه مبيعات بعد']);
+      showTip(tip, box, ev, dayLabel(d.day) + (d.slow_period ? ' · ركود' : ''), lines);
     })
-    .on('mouseleave', () => { days.attr('opacity', 1); tip.style.display = 'none'; });
+    .on('mouseleave', () => { g.attr('opacity', 1); tip.style.display = 'none'; });
 }
 
 function drawAll() {
   document.querySelectorAll('.px-sw[data-c]').forEach(e => e.style.background = C(Number(e.dataset.c)));
-  setTheme(); drawRange(); drawDaily(); drawWeekday(); drawOrbit(); drawTarget(); drawProd();
-  markFirst(); enhance();
+  drawRange(); drawDaily(); drawWeekday(); drawMonth(); drawTarget(); drawProd();
 }
 dash.onData(drawAll);
 
