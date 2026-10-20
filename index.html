@@ -1372,7 +1372,7 @@ document.querySelectorAll('#prtbl th button').forEach(b => b.addEventListener('c
   drawProfitTable();
 }));
 document.getElementById('prsearch').addEventListener('input', () => drawProfitTable());
-const sgnMoney = v => v == null ? '—' : '⁦' + (v < 0 ? '−' : '') + money0(Math.abs(v)) + '⁩';
+const sgnMoney = v => v == null ? '—' : '\u2066' + (v < 0 ? '−' : '') + money0(Math.abs(v)) + '\u2069';
 
 function drawProfitTable() {
   const D = dash.data('profit_table'), tb = document.querySelector('#prtbl tbody');
@@ -1396,7 +1396,7 @@ function drawProfitTable() {
     const td = el('td'), cb = el('div', 'cellbar'), bar = el('i');
     bar.style.width = Math.max(2, Math.abs(p.total_profit) / maxP * 70) + 'px'; bar.style.background = p.total_profit < 0 ? 'var(--color-bad)' : C(0);
     cb.appendChild(bar); cb.appendChild(el('span', p.total_profit < 0 ? 'bad' : '', sgnMoney(p.total_profit))); td.appendChild(cb); tr.appendChild(td);
-    tr.appendChild(el('td', p.margin < 0 ? 'bad' : '', p.margin == null ? '—' : '⁦' + pct0(p.margin) + '⁩'));
+    tr.appendChild(el('td', p.margin < 0 ? 'bad' : '', p.margin == null ? '—' : '\u2066' + pct0(p.margin) + '\u2069'));
     tr.appendChild(tag(p.khobar_class)); tr.appendChild(tag(p.dammam_class));
     tb.appendChild(tr);
   });
@@ -1562,7 +1562,7 @@ function drawCampaigns() {
     const kpi = (lbl, big, meta, cls) => { const k = el('div', 'px-var-kpi'); k.appendChild(el('div', 'px-lbl', lbl)); k.appendChild(el('div', 'px-big' + (cls ? ' ' + cls : ''), big)); k.appendChild(el('div', 'px-meta', meta)); g.appendChild(k); };
     kpi('مبيعات المنتج', intf(r.qty) + ' كوب', `${money0(r.sales)} ر.س · المعتاد ~${Math.round(r.avg_qty)} كوب`, 'ok');
     kpi('القفزة في المنتج', r.lift.toFixed(1) + '×', `زيادة ~${money0(r.extra_sales)} ر.س عن يومه العادي`, r.lift >= 1.5 ? 'ok' : 'warn');
-    kpi('اليوم ÷ اليوم اللي قبله', r.ratio.toFixed(2) + '×', `المعتاد ${r.prev_ratio.toFixed(2)}× · اليوم ${'⁦' + (r.vs_prev >= 0 ? '+' : '−') + pct0(Math.abs(r.vs_prev)) + '⁩'} عن نفس اليوم قبل`, lifted ? 'ok' : 'warn');
+    kpi('اليوم ÷ اليوم اللي قبله', r.ratio.toFixed(2) + '×', `المعتاد ${r.prev_ratio.toFixed(2)}× · اليوم ${'\u2066' + (r.vs_prev >= 0 ? '+' : '−') + pct0(Math.abs(r.vs_prev)) + '\u2069'} عن نفس اليوم قبل`, lifted ? 'ok' : 'warn');
     kpi('التارقت', pct0(r.target_pct), `على تارقت جمعة عادية: ${pct0(r.normal_target_pct)}`, r.normal_target_pct >= 1 ? 'ok' : 'bad');
     box.appendChild(g);
   });
